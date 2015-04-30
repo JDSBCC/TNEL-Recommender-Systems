@@ -5,9 +5,9 @@ public class User {
 	private int age;
 	private Boolean genre;//0-male/1-female
 	private String occupation;
-	private int zipcode;
+	private String zipcode;
 	
-	public User(int id, int age, Boolean genre, String occupation, int zipcode){
+	public User(int id, int age, Boolean genre, String occupation, String zipcode){
 		this.id=id;
 		this.age=age;
 		this.genre=genre;
@@ -47,11 +47,15 @@ public class User {
 		this.occupation = occupation;
 	}
 
-	public int getZipcode() {
+	public String getZipcode() {
 		return zipcode;
 	}
 
-	public void setZipcode(int zipcode) {
+	public void setZipcode(String zipcode) {
 		this.zipcode = zipcode;
+	}
+	
+	public String toString(){
+		return id+"|"+age+"|"+genre+"|"+occupation+"|"+zipcode;
 	}
 }

@@ -8,6 +8,11 @@ public class Genre {
 		this.id=id;
 		this.genre=genre;
 	}
+	
+	public Genre(){
+		this.id=0;
+		this.genre="";
+	}
 
 	public int getId() {
 		return id;
@@ -23,6 +28,10 @@ public class Genre {
 
 	public void setGenre(String genre) {
 		this.genre = genre;
+	}
+	
+	public String toString(){
+		return id+"|"+genre;
 	}
 	
 	
