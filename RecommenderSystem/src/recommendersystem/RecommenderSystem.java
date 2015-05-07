@@ -7,6 +7,7 @@ import data.Item;
 import data.Rating;
 import data.User;
 import utilities.File;
+import utilities.Matrix;
 
 public class RecommenderSystem {
 	
@@ -18,13 +19,24 @@ public class RecommenderSystem {
 	public static void main(String[] args) {
 		System.out.println("Recommender System");
 		
+		//Read data from database
 		File file = new File();
 		file.read("user");
 		file.read("genre");
 		file.read("item");
 		file.read("data");
-		
 		System.out.println("Database readed");
+		
+		//Get Ratings Matrix
+		System.out.println("Ratings Matrix");
+		double [][]matrix = Matrix.getRatingsMatrix();
+		Matrix.printMatrix(matrix);
+		
+		//Get Normalized Ratings Matrix
+		System.out.println("Normalized Ratings Matrix");
+		double [][]n_matrix = Matrix.getNormalizedRatingsMatrix(matrix);
+		Matrix.printMatrix(n_matrix);
+		
 	}
 
 }
