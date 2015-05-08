@@ -10,7 +10,13 @@ public class DynamicTrustPheromone {
 		this.user_v_id=user_v_id;
 		
 		double sim = similarity(matrix);
-		System.out.println("sim("+this.user_u_id+","+this.user_v_id+") = " + sim);
+		//System.out.println("sim("+this.user_u_id+","+this.user_v_id+") = " + sim);
+		
+		double conf = confidence(matrix);
+		//System.out.println("conf("+this.user_v_id+"|"+this.user_u_id+") = " + conf);
+		
+		double trust = trustIntensity(sim, conf);
+		System.out.println("t("+this.user_u_id+","+this.user_v_id+") = " + trust);
 	}
 	
 	public double similarity(double [][] matrix){
@@ -37,11 +43,28 @@ public class DynamicTrustPheromone {
 		return 0;
 	}
 	
-	public double confidence(){
-		return 0;
+	public double confidence(double [][] matrix){
+		double count=0, count2=0;
+		for(int j=0; j<matrix[0].length; j++){//o problema e o -1
+			if(matrix[user_u_id][j]!=-1 && matrix[user_v_id][j]!=-1){
+				count++;
+			}
+			if(matrix[user_u_id][j]!=-1){
+				count2++;
+			}
+		}
+		if(count2==0){
+			return 0;
+		}
+		return count/count2;
 	}
 	
-	public double trustIntensity(){
+	public double trustIntensity(double sim, double conf){
+		if(sim!=0 && conf !=0){
+			return (2*sim*conf)/(sim+conf);
+		}else if(sim==0 && conf!=0){
+			return conf * 0.01;//k=0.01
+		}
 		return 0;
 	}
 	
