@@ -6,6 +6,7 @@ import data.Genre;
 import data.Item;
 import data.Rating;
 import data.User;
+import tars.DynamicTrustPheromone;
 import utilities.File;
 import utilities.Matrix;
 
@@ -30,13 +31,21 @@ public class RecommenderSystem {
 		//Get Ratings Matrix
 		System.out.println("Ratings Matrix");
 		double [][]matrix = Matrix.getRatingsMatrix();
-		Matrix.printMatrix(matrix);
+		//Matrix.printMatrix(matrix);
 		
 		//Get Normalized Ratings Matrix
 		System.out.println("Normalized Ratings Matrix");
 		double [][]n_matrix = Matrix.getNormalizedRatingsMatrix(matrix);
 		Matrix.printMatrix(n_matrix);
 		
+		//Testing Dynamic Trust Pheromone
+		for(int i=0; i<n_matrix.length;i++){
+			for(int j =0 ; j<n_matrix.length;j++){
+				if(i!=j){
+					DynamicTrustPheromone dtp = new DynamicTrustPheromone(i, j, n_matrix);
+				}
+			}
+		}
 	}
 
 }

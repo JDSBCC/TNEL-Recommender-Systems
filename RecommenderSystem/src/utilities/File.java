@@ -84,7 +84,7 @@ public class File {
 	public void dataObject(String lineSet[]){
 		int userId = Integer.parseInt(lineSet[0]);
 		int itemId = Integer.parseInt(lineSet[1]);
-		int rating = lineSet[2].equals("_")?0:Integer.parseInt(lineSet[2]);
+		int rating = lineSet[2].equals("_")?-1:Integer.parseInt(lineSet[2]);
 		
 		RecommenderSystem.ratings.add(new Rating(userId, itemId, rating, lineSet[3]));
 	}
