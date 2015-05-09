@@ -36,16 +36,10 @@ public class RecommenderSystem {
 		//Get Normalized Ratings Matrix
 		System.out.println("Normalized Ratings Matrix");
 		double [][]n_matrix = Matrix.getNormalizedRatingsMatrix(matrix);
-		Matrix.printMatrix(n_matrix);
+		//Matrix.printMatrix(n_matrix);
 		
 		//Testing Dynamic Trust Pheromone
-		for(int i=0; i<n_matrix.length;i++){
-			for(int j =0 ; j<n_matrix.length;j++){
-				if(i!=j){
-					DynamicTrustPheromone dtp = new DynamicTrustPheromone(i, j, n_matrix);
-				}
-			}
-		}
+		DynamicTrustPheromone dtp = new DynamicTrustPheromone(4, n_matrix);
 	}
 
 }

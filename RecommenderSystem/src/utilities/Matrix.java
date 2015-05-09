@@ -12,7 +12,7 @@ public class Matrix {
 	//u2
 	//u3
 	
-	private static void initMatrix(int num, double[][]matrix){
+	public static void initMatrix(int num, double[][]matrix){
 		for(int i=0; i<matrix.length; i++){
 			for(int j=0; j<matrix[i].length; j++){
 				matrix[i][j]=num;
@@ -63,7 +63,7 @@ public class Matrix {
 	public static void printMatrix(double [][]matrix){
 		for(int i=0; i<matrix.length; i++){
 			for(int j=0; j<matrix[i].length; j++){
-				DecimalFormat oneDigit = new DecimalFormat("#,##0.00");
+				DecimalFormat oneDigit = new DecimalFormat("#,##0.0000");
 			    System.out.print(oneDigit.format(matrix[i][j]) + "  ");
 			}
 		    System.out.print("\n");
