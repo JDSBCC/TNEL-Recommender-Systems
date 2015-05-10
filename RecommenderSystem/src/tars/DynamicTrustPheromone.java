@@ -16,16 +16,14 @@ public class DynamicTrustPheromone {
 	public DynamicTrustPheromone(int activeUser, double [][] matrix){
 		
 		this.activeUser=activeUser;
-		root = new TreeNode(activeUser);//root
-		graph=new ArrayList<TreeNode>();
 		
 		//initilize trustMatrix
 		trustMatrix = new double[matrix.length][matrix.length];
 		Matrix.initMatrix(-1, trustMatrix);
 		
 		//calculate trust intensity
-		for(int i=0; i<matrix.length;i++){
-			for(int j =0 ; j<matrix.length;j++){
+		for(int i=0; i<trustMatrix.length;i++){
+			for(int j =0 ; j<trustMatrix.length;j++){
 				if(i!=j){
 					double sim = similarity(i, j, matrix);
 					//System.out.println("sim("+this.user_u_id+","+this.user_v_id+") = " + sim);
@@ -38,14 +36,14 @@ public class DynamicTrustPheromone {
 				}
 			}
 		}
+		System.out.println("Trust Intensity calculated!");
 		Matrix.printMatrix(trustMatrix);
 		
 		createGraph();
 		for(int i=0; i<graph.size();i++){
-			System.out.println("graph_node = "+graph.get(i).getUserObject());
 			if(graph.get(i).hasChildren()){
 				for(int j=0; j<graph.get(i).children().length;j++){
-					System.out.println("child["+j+"] = "+graph.get(i).children()[j].getUserObject());
+					System.out.println(graph.get(i).getUserObject()+" -- " + graph.get(i).children()[j].getUserObject() + ";");
 				}
 			}
 		}
@@ -101,50 +99,54 @@ public class DynamicTrustPheromone {
 	}
 	
 	public void createGraph(){
-		ArrayList<Integer> node_temp = new ArrayList<Integer>();
+		
+		//initialize trust and non_trust arraylists
+		ArrayList<TreeNode> trust_node = new ArrayList<TreeNode>();
+		ArrayList<Integer> non_trust_node = new ArrayList<Integer>();
+		
+		//create root node
+		root = new TreeNode(activeUser);//root
+		graph=new ArrayList<TreeNode>();
+		graph.add(root);
+		
+		trust_node.add(root);
 		
 		for(int i=0; i<trustMatrix.length; i++){
-			if(trustMatrix[activeUser][i]>0){//trust_node
-				TreeNode temp = new TreeNode(i);
-				root.add(temp);
-				graph.add(temp);
-			}else{//non_trust_node
-				if(activeUser!=i){
-					node_temp.add(i);
-				}
+			if(activeUser!=i){
+				non_trust_node.add(i);
 			}
 		}
-		createSubGraph(node_temp);
+		createSubGraph(trust_node, non_trust_node);
 	}
 	
-	public void createSubGraph(ArrayList<Integer> node_temp){
-		int count=0;
-		ArrayList<Integer> node_temp2 = new ArrayList<Integer>();
-		for(int i=0; i<node_temp.size(); i++){
+	public void createSubGraph(ArrayList<TreeNode> trust_node, ArrayList<Integer> non_trust_node){
+		ArrayList<TreeNode> trust_node2 = new ArrayList<TreeNode>();
+		ArrayList<Integer> non_trust_node2 = new ArrayList<Integer>();
+		
+		for(int i=0; i<non_trust_node.size(); i++){
 			double value = -1;
 			TreeNode node = null;
-			for(int j=0; j<root.children().length; j++){
-				if(trustMatrix[root.children()[j].getUserObject()][node_temp.get(i)]>0){
-					if(trustMatrix[root.children()[j].getUserObject()][node_temp.get(i)]>value){
-						value=trustMatrix[root.children()[j].getUserObject()][node_temp.get(i)];
-						node = root.children()[j];
+			for(int j=0; j<trust_node.size(); j++){
+				if(trustMatrix[trust_node.get(j).getUserObject()][non_trust_node.get(i)]>0){
+					if(trustMatrix[trust_node.get(j).getUserObject()][non_trust_node.get(i)]>value){
+						value=trustMatrix[trust_node.get(j).getUserObject()][non_trust_node.get(i)];
+						node = trust_node.get(j);
 					}
 				}
 			}
 			if(value!=-1 && node!=null){//trust_node
-				TreeNode temp = new TreeNode(node_temp.get(i));
+				TreeNode temp = new TreeNode(non_trust_node.get(i));
 				node.add(temp);
 				graph.add(temp);
+				trust_node2.add(temp);
 			}else{//non_trust_node
-				count++;
-				node_temp2.add(node_temp.get(i));
+				non_trust_node2.add(non_trust_node.get(i));
 			}
 		}
-		if(count==node_temp.size()){
+		if(trust_node2.isEmpty()){
 			return;
-		}else{
-			createSubGraph(node_temp2);
 		}
+		createSubGraph(trust_node2, non_trust_node2);
 	}
 	
 	public void update(){
