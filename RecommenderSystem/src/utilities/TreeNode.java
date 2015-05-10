@@ -121,8 +121,7 @@ public class TreeNode {
 	}
 
 	private int recurseDepth(TreeNode node, int depth) {
-		if (node == null) // reached top of tree
-		{
+		if (node == null) { // reached top of tree
 			return depth;
 		} else {
 			return recurseDepth(node.parent, depth + 1);

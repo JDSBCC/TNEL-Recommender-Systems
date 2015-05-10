@@ -7,6 +7,7 @@ import data.Item;
 import data.Rating;
 import data.User;
 import tars.DynamicTrustPheromone;
+import tars.RecommendationProcess;
 import utilities.File;
 import utilities.Matrix;
 
@@ -36,10 +37,11 @@ public class RecommenderSystem {
 		//Get Normalized Ratings Matrix
 		System.out.println("Normalized Ratings Matrix");
 		double [][]n_matrix = Matrix.getNormalizedRatingsMatrix(matrix);
-		//Matrix.printMatrix(n_matrix);
+		Matrix.printMatrix(n_matrix);
 		
-		//Testing Dynamic Trust Pheromone
+		//Testing TARS
 		DynamicTrustPheromone dtp = new DynamicTrustPheromone(4, n_matrix);
+		RecommendationProcess rp = new RecommendationProcess(dtp);
 	}
 
 }

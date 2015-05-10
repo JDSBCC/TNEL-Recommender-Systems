@@ -40,13 +40,13 @@ public class DynamicTrustPheromone {
 		Matrix.printMatrix(trustMatrix);
 		
 		createGraph();
-		for(int i=0; i<graph.size();i++){
+		/*for(int i=0; i<graph.size();i++){
 			if(graph.get(i).hasChildren()){
 				for(int j=0; j<graph.get(i).children().length;j++){
 					System.out.println(graph.get(i).getUserObject()+" -- " + graph.get(i).children()[j].getUserObject() + ";");
 				}
 			}
-		}
+		}*/
 	}
 	
 	public double similarity(int user_u_id, int user_v_id, double [][] matrix){
@@ -99,12 +99,9 @@ public class DynamicTrustPheromone {
 	}
 	
 	public void createGraph(){
-		
-		//initialize trust and non_trust arraylists
 		ArrayList<TreeNode> trust_node = new ArrayList<TreeNode>();
 		ArrayList<Integer> non_trust_node = new ArrayList<Integer>();
 		
-		//create root node
 		root = new TreeNode(activeUser);//root
 		graph=new ArrayList<TreeNode>();
 		graph.add(root);
@@ -151,6 +148,18 @@ public class DynamicTrustPheromone {
 	
 	public void update(){
 		
+	}
+	
+	public double[][] getTrustMatrix(){
+		return trustMatrix;
+	}
+	
+	public ArrayList<TreeNode> getGraph(){
+		return graph;
+	}
+	
+	public TreeNode getActiveUserNode(){
+		return root;
 	}
 
 }
