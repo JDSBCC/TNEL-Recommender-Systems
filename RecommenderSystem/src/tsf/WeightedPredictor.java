@@ -1,4 +1,4 @@
-package algorithms;
+package tsf;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -173,14 +173,14 @@ public class WeightedPredictor {
 			itemARatings[i] = userItemRatingMatrix[i][item];
 		}
 
-		// sum user x ratings
-		double ratingSumItemA= 0;
+		// sum item x ratings
+		double ratingSumItemA= 0.0;
 
 		int numberItemARatings= 0;
 
 		for(int i= 0; i < itemARatings.length; i++)
 		{
-			// items rated by user A
+			// item ratings by user Y
 			if(itemARatings[i] != null)
 			{
 				numberItemARatings++;
@@ -189,7 +189,7 @@ public class WeightedPredictor {
 			}
 		}
 
-		//average rating values of user x on all items that he has rated, independently of other users ratings
+		//average rating values of item x by all users that have rated it
 		//mean(Rx)
 		double meanItemA= (double) (ratingSumItemA / ((double) numberItemARatings));
 
@@ -201,34 +201,25 @@ public class WeightedPredictor {
 		// N^(eICF)
 		Integer[] selectedNeighborsByItemBasedSimilarity= topNMethod(4, item, eicfMatrix[item]);
 
-		////////////////
-
-//		for(int w = 0; w < selectedNeighborsByItemBasedSimilarity.length; w++)
-//		{
-//			System.out.print(selectedNeighborsByItemBasedSimilarity[w] + ", ");
-//		}
-//		System.out.println("");
-
-		///////////////
-
 		for(int i= 0; i < selectedNeighborsByItemBasedSimilarity.length; i++)
 		{
 
 			// eICFx,y
 			Double similarityValue= eicfMatrix[item][selectedNeighborsByItemBasedSimilarity[i]];
 
-			if(similarityValue != null && Math.abs(similarityValue) >= 0.00001)
+			if(similarityValue != null)
 			{
 				// item b column 
 				Double[] itemBRatings= new Double[userItemRatingMatrix.length];
 
+				// TODO Enhancement -> It is possible to do all the calculation on this cycle instead doing it on the next cycle
 				for(int a = 0; a < userItemRatingMatrix.length; a++)
 				{
 					itemBRatings[a] = userItemRatingMatrix[a][selectedNeighborsByItemBasedSimilarity[i]];
 				}
 
 				// sum user x ratings
-				double ratingSumItemB= 0;
+				double ratingSumItemB= 0.0;
 
 				int numberItemBRatings= 0;
 
@@ -236,7 +227,7 @@ public class WeightedPredictor {
 
 				for(int k= 0; k < itemBRatings.length; k++)
 				{
-					// items rated by user B
+					// item ratings by user Y
 					if(itemBRatings[k] != null)
 					{
 						numberItemBRatings++;
@@ -244,6 +235,7 @@ public class WeightedPredictor {
 						ratingSumItemB += itemBRatings[k];
 					}
 
+					//Ra,y
 					if(k == userA)
 						itemBRatingOnTargetUser= itemBRatings[k];
 
@@ -251,8 +243,8 @@ public class WeightedPredictor {
 
 				if(itemBRatingOnTargetUser != null)
 				{
-
-					//average rating values of user x on all items that he has rated, independently of other users ratings
+					
+					//average rating values of item x for all users that have rated it
 					//mean(Rx)
 					double meanItemB= (double) (ratingSumItemB / ((double) numberItemBRatings));
 
@@ -261,7 +253,9 @@ public class WeightedPredictor {
 
 					// sum(eICFx,y + IRy)
 					similarityDenominator += similarityValue + itemReputation[selectedNeighborsByItemBasedSimilarity[i]];
+
 				}
+
 
 			}
 
@@ -278,29 +272,14 @@ public class WeightedPredictor {
 
 		// N^(SemanticSimilarity)
 		Integer[] selectedNeighborsBySS= topNMethod(4, item, semanticSimilarityMatrix[item]);
-		
-		////////////////
-		
-//		for(int w = 0; w < selectedNeighborsBySS.length; w++)
-//		{
-//			System.out.print(selectedNeighborsBySS[w] + ", ");
-//		}
-//		System.out.println("");
-		
-		///////////////
 
 		for(int i= 0; i < selectedNeighborsBySS.length; i++)
 		{
 
 			// SSim x,y
 			Double ssValue= semanticSimilarityMatrix[item][selectedNeighborsBySS[i]];
-			
-			System.out.println("I'm neighbor " + selectedNeighborsBySS[i]);
-//			System.out.println(ssValue);
-			System.out.println("");
-			
 
-			if(ssValue != null && Math.abs(ssValue) >= 0.00001)
+			if(ssValue != null)
 			{
 				// item b column 
 				Double[] itemBRatings= new Double[userItemRatingMatrix.length];
@@ -311,7 +290,6 @@ public class WeightedPredictor {
 					
 				}
 
-
 				// sum user x ratings
 				double ratingSumItemB= 0;
 
@@ -321,7 +299,7 @@ public class WeightedPredictor {
 
 				for(int k= 0; k < itemBRatings.length; k++)
 				{
-					// items rated by user B
+					// item ratings by user Y
 					if(itemBRatings[k] != null)
 					{
 						numberItemBRatings++;
@@ -329,6 +307,7 @@ public class WeightedPredictor {
 						ratingSumItemB += itemBRatings[k];
 					}
 
+					// Ra,y
 					if(k == userA)
 						itemBRatingByTargetUser= itemBRatings[k];
 
@@ -337,12 +316,12 @@ public class WeightedPredictor {
 				if(itemBRatingByTargetUser != null)
 				{
 
-					//average rating values of user x on all items that he has rated, independently of other users ratings
+					//average rating values of item x for all users that have rated it
 					//mean(Ry)
-					double meanUserB= (double) (ratingSumItemB / ((double) numberItemBRatings));
+					double meanItemB= (double) (ratingSumItemB / ((double) numberItemBRatings));
 
 					//sum(SSim x,y * (Ra,y - mean(Ry)) * IRy)
-					ssNumerator += ssValue * (itemBRatingByTargetUser - meanUserB) * itemReputation[selectedNeighborsBySS[i]];
+					ssNumerator += ssValue * (itemBRatingByTargetUser - meanItemB) * itemReputation[selectedNeighborsBySS[i]];
 
 					//sum(SSim x,y + IRy)
 					ssDenominator += ssValue + itemReputation[selectedNeighborsBySS[i]];
@@ -352,13 +331,13 @@ public class WeightedPredictor {
 
 		}
 		
-		System.out.println("meanItem= " + meanItemA);
-		System.out.println("similarityNumerator= " + similarityNumerator);
-		System.out.println("ssNumerator= " + ssNumerator);
-		System.out.println("similarityDenominator= " + similarityDenominator);
-		System.out.println("ssDenominator= " + ssDenominator);
-
-		return meanItemA + ( ( similarityNumerator + ssNumerator ) / (double)( similarityDenominator + ssDenominator ) );
+		double numerator = similarityNumerator + ssNumerator;
+		double denominator = similarityDenominator + ssDenominator;
+		
+		if(Math.abs(numerator) >= 0.00001)
+			return meanItemA + ( ( numerator ) / (double)( denominator ) );
+		else
+			return meanItemA;
 
 
 
@@ -374,7 +353,6 @@ public class WeightedPredictor {
 		{
 			pairIndexValuelist.add(new Pair<Integer, Double>(i, line[i]));
 		}
-
 
 		Collections.sort(pairIndexValuelist, new Comparator<Pair<Integer, Double>>() {
 			@Override

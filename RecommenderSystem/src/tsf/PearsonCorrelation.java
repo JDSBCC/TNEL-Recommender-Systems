@@ -1,15 +1,12 @@
-package algorithms;
+package tsf;
 
 import java.util.ArrayList;
 
-//TODO colocar comentarios de acordo com o conteudo (existem comentarios da PearsonCorrelation)
-//TODO esta a dar resultados diferentes do esperado
-
-public class MeanSquaredDifferencesMethod {
+public class PearsonCorrelation {
 	
-	//Assumption: userA is the active user
 	public Double result(int userA, int userB, Double[][] userItemRatingMatrix)
 	{
+
 		if(userA == userB)
 			return 1.0;
 		else
@@ -86,43 +83,47 @@ public class MeanSquaredDifferencesMethod {
 				double meanUserA= (double) (ratingSumUserA / ((double) numberUserARatedItems));
 				double meanUserB= (double) (ratingSumUserB / ((double) numberUserBRatedItems));
 
-//				//update auxiliary array "calcArray"	
-//				// Sum (Rx,i - mean(Rx))
-//				for(int i= 0; i < calcArrayUserA.size(); i++)
-//				{
-//					calcArrayUserA.set(i, calcArrayUserA.get(i) - meanUserA);
-//					calcArrayUserB.set(i, calcArrayUserB.get(i) - meanUserB);
-//				}
+				//update auxiliary array "calcArray"	
+				// Sum (Rx,i - mean(Rx))
+				for(int i= 0; i < calcArrayUserA.size(); i++)
+				{
+					calcArrayUserA.set(i, calcArrayUserA.get(i) - meanUserA);
+					calcArrayUserB.set(i, calcArrayUserB.get(i) - meanUserB);
+				}
 
 				// calculate numerator
 				// Sum(((Rx,i - mean(Rx)) * ((Ry,i - mean(Ry)))
 				double numerator= 0.0;
-				
 
 				for(int i = 0; i < numberCoratedItems; i++)
 				{
-					//Predicted Rating -> Resnick's Prediction Method: Pa,i= mean(Ra) + (Rb,i - mean(Rb))
-					//where Pa,i belongs to [0,5]
-					// In order to the final result belong to the interval [0,1] will be necessary to normalize
-					// Pa,i and Ra,i
-					double predictedRealDifference= 
-							maxMinNormalizationMethod(0, 5, ( meanUserA + ( calcArrayUserB.get(i) - meanUserB ) ), 0, 1) 
-							- maxMinNormalizationMethod(0, 5, calcArrayUserA.get(i), 0, 1);
-					
-//					System.out.println("a= " + maxMinNormalizationMethod(0, 5, ( meanUserA + ( calcArrayUserB.get(i) - meanUserB ) ), 0, 1) + " - " + maxMinNormalizationMethod(0, 5, calcArrayUserA.get(i), 0, 1) + " = " +  predictedRealDifference + "!");
-//					
-					numerator += predictedRealDifference * predictedRealDifference; 
+					numerator += (double)(calcArrayUserA.get(i) * calcArrayUserB.get(i));
 				}
 
-				return (double) ((1.0) - (numerator / ((double) numberCoratedItems)));
+
+				// calculate denominator
+
+				// Sum( (Rx,i - mean(Rx))^2)
+				double quadraticSumUserA= 0.0;
+				double quadraticSumUserB= 0.0;
+
+				for(int i = 0; i < numberCoratedItems; i++)
+				{
+					quadraticSumUserA += calcArrayUserA.get(i) * calcArrayUserA.get(i);
+					quadraticSumUserB += calcArrayUserB.get(i) * calcArrayUserB.get(i);
+				}
+
+				// sqrt( (Sum( (Rx,i - mean(Rx))^2)) * (Sum( (Ry,i - mean(Ry))^2)) )
+				double denominator = Math.sqrt(quadraticSumUserA) * Math.sqrt(quadraticSumUserB);
+
+
+				if(denominator == 0.0 && numerator == 0.0)
+					return 0.0;
+				else
+					return (double) (numerator / ((double) denominator));
 
 			}
 		}
-	}
-	
-	private double maxMinNormalizationMethod(double min, double max, double value, double newMin, double newMax)
-	{
-		return (((value - min)/(double)(max - min)) * (newMax - newMin)) + newMin; 
 	}
 
 }

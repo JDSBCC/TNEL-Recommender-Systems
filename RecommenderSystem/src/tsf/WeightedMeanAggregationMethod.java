@@ -1,4 +1,4 @@
-package algorithms;
+package tsf;
 
 // Trust propagation method
 // input: implicit trust matrix

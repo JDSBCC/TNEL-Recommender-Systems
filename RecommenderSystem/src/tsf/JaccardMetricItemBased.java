@@ -1,4 +1,4 @@
-package algorithms;
+package tsf;
 
 
 public class JaccardMetricItemBased {

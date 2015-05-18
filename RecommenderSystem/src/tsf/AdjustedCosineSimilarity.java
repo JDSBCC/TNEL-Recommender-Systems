@@ -1,4 +1,4 @@
-package algorithms;
+package tsf;
 
 import java.util.ArrayList;
 
