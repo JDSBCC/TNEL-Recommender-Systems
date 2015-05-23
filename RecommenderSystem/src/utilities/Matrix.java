@@ -12,36 +12,26 @@ public class Matrix {
 	//u2
 	//u3
 	
-	public static void initMatrix(int num, double[][]matrix){
-		for(int i=0; i<matrix.length; i++){
-			for(int j=0; j<matrix[i].length; j++){
-				matrix[i][j]=num;
-			}
-		}
-	}
-	
-	public static double [][] getRatingsMatrix(){//-1 significa que nao tem calssificaçao
-		double[][]matrix=new double[/*943*/10][/*1682*/10];//so para ser facil testar
-		initMatrix(-1, matrix);
+	public static Double [][] getRatingsMatrix(){//-1 significa que nao tem calssificaçao
+		Double[][]matrix=new Double[/*943*/10][/*1682*/10];//so para ser facil testar
 		
 		for(int i=0; i<RecommenderSystem.ratings.size(); i++){
 			int userId=RecommenderSystem.ratings.get(i).getUser().getId();
 			int itemId=RecommenderSystem.ratings.get(i).getItem().getId();
 			if(userId<10 && itemId<10){//so para teste-para nao dar erro
-				matrix[userId-1][itemId-1]=RecommenderSystem.ratings.get(i).getRating();
+				matrix[userId-1][itemId-1]=(double)RecommenderSystem.ratings.get(i).getRating();
 			}
 		}
 		return matrix;
 	}
 	
-	public static double [][] getNormalizedRatingsMatrix(double[][]matrix){//-1=sem classificaçao
-		double [][]new_matrix = new double[matrix.length][matrix[0].length];
-		initMatrix(-1, new_matrix);
+	public static Double [][] getNormalizedRatingsMatrix(Double[][]matrix){//-1=sem classificaçao
+		Double [][]new_matrix = new Double[matrix.length][matrix[0].length];
 		for(int i=0; i<matrix.length; i++){
 			double rating_sum = getRatingItemSum(matrix[i]);
 			for(int j=0; j<matrix[0].length; j++){
 				double rating = 0;
-				if(matrix[i][j]==-1){
+				if(matrix[i][j]==null){
 					continue;
 				}else{
 					rating=matrix[i][j];
@@ -52,19 +42,24 @@ public class Matrix {
 		return new_matrix;
 	}
 	
-	private static double getRatingItemSum(double []matrix){
+	private static Double getRatingItemSum(Double []matrix){
 		double sum=0;
 		for(int k=0; k<matrix.length; k++){
-			sum+=matrix[k]==-1?0:matrix[k];
+			if(matrix[k]!=null)
+				sum+=matrix[k];
 		}
 		return sum;
 	}
 	
-	public static void printMatrix(double [][]matrix){
+	public static void printMatrix(Double [][]matrix){
 		for(int i=0; i<matrix.length; i++){
 			for(int j=0; j<matrix[i].length; j++){
-				DecimalFormat oneDigit = new DecimalFormat("#,##0.0000");
-			    System.out.print(oneDigit.format(matrix[i][j]) + "  ");
+				if(matrix[i][j]!=null){
+					DecimalFormat oneDigit = new DecimalFormat("#,##0.0000");
+			    	System.out.print(oneDigit.format(matrix[i][j]) + "  ");
+				}else{
+					System.out.print("null    ");
+				}
 			}
 		    System.out.print("\n");
 		}

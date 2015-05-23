@@ -41,12 +41,12 @@ public class RecommenderSystem {
 		
 		//Get Ratings Matrix
 		System.out.println("Ratings Matrix");
-		double [][]matrix = Matrix.getRatingsMatrix();
+		Double [][]matrix = Matrix.getRatingsMatrix();
 		//Matrix.printMatrix(matrix);
 		
 		//Get Normalized Ratings Matrix
 		System.out.println("Normalized Ratings Matrix");
-		double [][]n_matrix = Matrix.getNormalizedRatingsMatrix(matrix);
+		Double [][]n_matrix = Matrix.getNormalizedRatingsMatrix(matrix);
 		Matrix.printMatrix(n_matrix);
 		
 		//Testing TARS
@@ -55,7 +55,7 @@ public class RecommenderSystem {
 		
 		
 		//Recommender System TSF
-		test3();
+		//test3();
 	}
 	
 	public static Double[][] getSupplierBuyerRatingMatrix()

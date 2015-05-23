@@ -12,7 +12,7 @@ public class RecommendationProcess {
 	private int level;
 	private ArrayList<TrustworthyFriend> tf;
 	
-	public RecommendationProcess(DynamicTrustPheromone dtp, double [][]ratings){
+	public RecommendationProcess(DynamicTrustPheromone dtp, Double [][]ratings){
 		
 		this.dtp=dtp;
 		
@@ -44,7 +44,7 @@ public class RecommendationProcess {
 		return Math.max(trustIntensity, 1/level);
 	}
 	
-	public void aggregatingRatings(double [][]ratings){
+	public void aggregatingRatings(Double [][]ratings){
 		ArrayList<Integer> top_U = top_U(dtp.getTrustMatrix(),1);
 		//System.out.println("top_U = " + top_U.size());
 		if(top_U.size()==1){
@@ -54,17 +54,17 @@ public class RecommendationProcess {
 		}
 	}
 	
-	public ArrayList<Integer> top_U(double [][] trustMatrix, int item){
+	public ArrayList<Integer> top_U(Double [][] trustMatrix, int item){
 		ArrayList<Integer> top_U = new ArrayList<Integer>();
 		double maior = -1;
 		
 		for(int i = 0; i<trustMatrix.length;i++){
-			if(trustMatrix[i][item]>=maior){
+			if(trustMatrix[i][item]!=null && trustMatrix[i][item]>=maior){
 				maior=trustMatrix[i][item];
 			}
 		}
 		for(int i = 0; i<trustMatrix.length;i++){
-			if(trustMatrix[i][item]==maior){
+			if(trustMatrix[i][item]!=null && trustMatrix[i][item]==maior){
 				top_U.add(i);
 			}
 		}

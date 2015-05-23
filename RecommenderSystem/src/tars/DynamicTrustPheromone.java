@@ -8,18 +8,17 @@ import utilities.TreeNode;
 
 public class DynamicTrustPheromone {
 	
-	private double [][] trustMatrix;
+	private Double[][] trustMatrix;
 	private int activeUser;
 	TreeNode root;
 	private ArrayList<TreeNode> graph;
 	
-	public DynamicTrustPheromone(int activeUser, double [][] matrix){
+	public DynamicTrustPheromone(int activeUser, Double [][] matrix){
 		
 		this.activeUser=activeUser;
 		
 		//initilize trustMatrix
-		trustMatrix = new double[matrix.length][matrix.length];
-		Matrix.initMatrix(-1, trustMatrix);
+		trustMatrix = new Double[matrix.length][matrix.length];
 		
 		//calculate trust intensity
 		for(int i=0; i<trustMatrix.length;i++){
@@ -49,7 +48,7 @@ public class DynamicTrustPheromone {
 		}*/
 	}
 	
-	public double similarity(int user_u_id, int user_v_id, double [][] matrix){
+	public double similarity(int user_u_id, int user_v_id, Double [][] matrix){
 		Statistics statu=new Statistics(matrix[user_u_id]);
 		Statistics statv=new Statistics(matrix[user_v_id]);
 		double average_u = statu.getMean();
@@ -57,7 +56,7 @@ public class DynamicTrustPheromone {
 		
 		double sum=0;
 		for(int j=0; j<matrix[0].length; j++){//o problema e o -1
-			if(matrix[user_u_id][j]!=-1 && matrix[user_v_id][j]!=-1){
+			if(matrix[user_u_id][j]!=null && matrix[user_v_id][j]!=null){
 				sum+=(matrix[user_u_id][j]-average_u)*(matrix[user_v_id][j]-average_v);
 			}
 		}
@@ -73,13 +72,13 @@ public class DynamicTrustPheromone {
 		return 0;
 	}
 	
-	public double confidence(int user_u_id, int user_v_id, double [][] matrix){
+	public double confidence(int user_u_id, int user_v_id, Double [][] matrix){
 		double count=0, count2=0;
 		for(int j=0; j<matrix[0].length; j++){//o problema e o -1
-			if(matrix[user_u_id][j]!=-1 && matrix[user_v_id][j]!=-1){
+			if(matrix[user_u_id][j]!=null && matrix[user_v_id][j]!=null){
 				count++;
 			}
-			if(matrix[user_u_id][j]!=-1){
+			if(matrix[user_u_id][j]!=null){
 				count2++;
 			}
 		}
@@ -150,7 +149,7 @@ public class DynamicTrustPheromone {
 		
 	}
 	
-	public double[][] getTrustMatrix(){
+	public Double[][] getTrustMatrix(){
 		return trustMatrix;
 	}
 	

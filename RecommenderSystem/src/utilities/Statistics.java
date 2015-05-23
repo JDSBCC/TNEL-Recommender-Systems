@@ -1,13 +1,13 @@
 package utilities;
 
 public class Statistics {
-	private double[] data;
+	private Double[] data;
 	private double size = 0;
 
-	public Statistics(double[] data) {
+	public Statistics(Double[] data) {
 		this.data = data;
-		for (double a : data){
-			if(a!=-1){
+		for (Double a : data){
+			if(a!=null){
 				size++;
 			}
 		}
@@ -15,8 +15,8 @@ public class Statistics {
 
 	public double getMean() {
 		double sum = 0.0;
-		for (double a : data){
-			if(a!=-1){
+		for (Double a : data){
+			if(a!=null){
 				sum += a;
 			}
 		}
@@ -26,8 +26,8 @@ public class Statistics {
 	public double getVariance() {
 		double mean = getMean();
 		double temp = 0;
-		for (double a : data){
-			if(a!=-1){
+		for (Double a : data){
+			if(a!=null){
 				temp += (a - mean) * (a - mean);
 			}
 		}
