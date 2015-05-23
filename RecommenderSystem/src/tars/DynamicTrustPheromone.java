@@ -149,6 +149,10 @@ public class DynamicTrustPheromone {
 		
 	}
 	
+	public double delta(){
+		return 0;
+	}
+	
 	public Double[][] getTrustMatrix(){
 		return trustMatrix;
 	}
