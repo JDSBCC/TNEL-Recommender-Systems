@@ -27,6 +27,8 @@ public class RecommenderSystem {
 	public static ArrayList<Item> items= new ArrayList<Item>();
 	public static ArrayList<Genre> genres= new ArrayList<Genre>();
 	public static ArrayList<Rating> ratings= new ArrayList<Rating>();
+	
+	public static Double [][] tars_ratings;
 
 	public static void main(String[] args) {
 		System.out.println("Recommender System");
@@ -46,12 +48,14 @@ public class RecommenderSystem {
 		
 		//Get Normalized Ratings Matrix
 		System.out.println("Normalized Ratings Matrix");
-		Double [][]n_matrix = Matrix.getNormalizedRatingsMatrix(matrix);
-		Matrix.printMatrix(n_matrix);
+		tars_ratings = Matrix.getNormalizedRatingsMatrix(matrix);
+		Matrix.printMatrix(tars_ratings);
 		
 		//Testing TARS
-		DynamicTrustPheromone dtp = new DynamicTrustPheromone(4, n_matrix);
-		RecommendationProcess rp = new RecommendationProcess(dtp, n_matrix);
+		DynamicTrustPheromone dtp = new DynamicTrustPheromone(4, tars_ratings);
+		RecommendationProcess rp = new RecommendationProcess(1,dtp, tars_ratings);
+		System.out.println("Trust Intensity calculated!");
+		Matrix.printMatrix(tars_ratings);
 		
 		
 		//Recommender System TSF

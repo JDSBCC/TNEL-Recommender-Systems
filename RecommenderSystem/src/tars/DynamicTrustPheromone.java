@@ -74,7 +74,7 @@ public class DynamicTrustPheromone {
 	
 	public double confidence(int user_u_id, int user_v_id, Double [][] matrix){
 		double count=0, count2=0;
-		for(int j=0; j<matrix[0].length; j++){//o problema e o -1
+		for(int j=0; j<matrix[0].length; j++){
 			if(matrix[user_u_id][j]!=null && matrix[user_v_id][j]!=null){
 				count++;
 			}
