@@ -1,0 +1,15 @@
+#scene{
+    -fx-background-color: #393939
+}
+
+#title{
+    -fx-font: 50px "Tw Cen MT Condensed";
+    -fx-fill: white;
+    -fx-effect: dropshadow(three-pass-box , rgba(0, 0, 0, 0.7), 2, 2 , 2, 2);
+}
+
+#text{
+    -fx-font: 15px "Tw Cen MT Condensed";
+    -fx-fill: white;
+    -fx-effect: dropshadow(three-pass-box , rgba(0, 0, 0, 0.7), 2, 2 , 2, 2);
+}
