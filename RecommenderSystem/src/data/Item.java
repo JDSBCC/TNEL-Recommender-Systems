@@ -7,14 +7,16 @@ public class Item {
 	private String videoReleaseDate;
 	private String imdbUrl;
 	private Genre [] genre;
+	private Double[] binaryItemSemantic;
 	
-	public Item(int id, String title, int releaseDate, String videoReleaseDate, String imdbUrl, Genre [] genre){
+	public Item(int id, String title, int releaseDate, String videoReleaseDate, String imdbUrl, Genre [] genre, Double[] binaryItemSemantic){
 		this.id=id;
 		this.title=title;
 		this.releaseDate=releaseDate;
 		this.videoReleaseDate=videoReleaseDate;
 		this.imdbUrl=imdbUrl;
 		this.genre=genre;
+		this.binaryItemSemantic= binaryItemSemantic;
 	}
 
 	public int getId() {
@@ -65,6 +67,16 @@ public class Item {
 		this.genre = genre;
 	}
 	
+	
+	
+	public Double[] getBinaryItemSemantic() {
+		return binaryItemSemantic;
+	}
+
+	public void setBinaryItemSemantic(Double[] binaryItemSemantic) {
+		this.binaryItemSemantic = binaryItemSemantic;
+	}
+
 	public String toString(){
 		String string=id+"|"+title+"|"+releaseDate+"|"+videoReleaseDate+"|"+imdbUrl;
 		for(int i=0; i<genre.length;i++){

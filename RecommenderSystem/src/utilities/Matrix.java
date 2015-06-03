@@ -13,7 +13,7 @@ public class Matrix {
 	//u3
 	
 	public static Double [][] getRatingsMatrix(){//-1 significa que nao tem calssificaçao
-		Double[][]matrix=new Double[/*943*/10][/*1682*/10];//so para ser facil testar
+		Double[][]matrix=new Double[943/*10*/][1682/*10*/];//so para ser facil testar
 		
 		for(int i=0; i<RecommenderSystem.ratings.size(); i++){
 			int userId=RecommenderSystem.ratings.get(i).getUser().getId();
@@ -63,6 +63,25 @@ public class Matrix {
 			}
 		    System.out.print("\n");
 		}
+	}
+	
+	//Matrix form
+	//  g1  g2  g3  g4
+	//i1
+	//i2
+	//i3
+	
+	public static Double [][] getItemTaxonomyMatrix(){
+		Double[][] matrix = new Double[1682/*10*/][19];
+		
+		for(int i=0; i<RecommenderSystem.items.size()/*10*/; i++){
+			
+			Double[] binaryItemTaxonomy= RecommenderSystem.items.get(i).getBinaryItemSemantic();
+			
+			matrix[i]= binaryItemTaxonomy;
+
+		}
+		return matrix;
 	}
 
 }

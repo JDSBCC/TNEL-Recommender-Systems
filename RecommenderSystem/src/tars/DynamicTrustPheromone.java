@@ -35,8 +35,8 @@ public class DynamicTrustPheromone {
 				}
 			}
 		}
-		System.out.println("Trust Intensity calculated!");
-		Matrix.printMatrix(trustMatrix);
+//		System.out.println("Trust Intensity calculated!");
+//		Matrix.printMatrix(trustMatrix);
 		
 		createGraph();
 		/*for(int i=0; i<graph.size();i++){

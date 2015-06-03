@@ -70,7 +70,13 @@ public class File {
 		}
 
 		Genre[]genre = new Genre[19];
+		
+		Double[] binaryItemSemantic = new Double[19];
+		
 		for(int i=5; i<lineSet.length;i++){
+			
+			binaryItemSemantic[i-5] = new Double(lineSet[i]);
+			
 			if(lineSet[i].equals("1")){
 				genre[i-5]=RecommenderSystem.genres.get(i-5);
 			}else{
@@ -78,7 +84,7 @@ public class File {
 			}
 		}
 		
-		RecommenderSystem.items.add(new Item(id, lineSet[1], releaseDate, lineSet[3], lineSet[4], genre));
+		RecommenderSystem.items.add(new Item(id, lineSet[1], releaseDate, lineSet[3], lineSet[4], genre, binaryItemSemantic));
 	}
 	
 	public void dataObject(String lineSet[]){
