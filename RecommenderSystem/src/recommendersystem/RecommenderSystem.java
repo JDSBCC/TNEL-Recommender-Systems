@@ -1,5 +1,7 @@
 package recommendersystem;
 
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import tsf.AdjustedCosineSimilarity;
@@ -16,6 +18,7 @@ import data.Genre;
 import data.Item;
 import data.Rating;
 import data.User;
+import evaluation.EvaluationMetrics;
 import tars.DynamicTrustPheromone;
 import tars.RecommendationProcess;
 import utilities.File;
@@ -41,11 +44,30 @@ public class RecommenderSystem {
 		file.read("item");
 		file.read("data");
 		System.out.println("Database readed");
-		
-		
+
 		//Get Ratings Matrix
 		System.out.println("Ratings Matrix");
-		Double [][]matrix = Matrix.getRatingsMatrix();
+		Double [][]matrix = Matrix.getRatingsMatrix(943, 1682, 100000);
+		
+		FileWriter ratingsMatrixFile= null;
+
+		try {
+			ratingsMatrixFile = new FileWriter("ratingsMatrix.csv");
+			
+			for(int i= 0; i < matrix.length; i++)
+			{
+				for(int j= 0; j < matrix[i].length; j++)
+				{
+					ratingsMatrixFile.append(String.valueOf(matrix[i][j]));
+					ratingsMatrixFile.append(",");
+				}
+				ratingsMatrixFile.append("\n");
+			}
+
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		
 		//Matrix.printMatrix(matrix);
@@ -65,6 +87,26 @@ public class RecommenderSystem {
 		
 		Double[][] binaryItemTaxonomyMatrix = Matrix.getItemTaxonomyMatrix();
 		
+		FileWriter binaryItemTaxonomyMatrixFile= null;
+
+		try {
+			binaryItemTaxonomyMatrixFile = new FileWriter("binaryItemTaxonomyMatrix.csv");
+			
+			for(int i= 0; i < binaryItemTaxonomyMatrix.length; i++)
+			{
+				for(int j= 0; j < binaryItemTaxonomyMatrix[i].length; j++)
+				{
+					binaryItemTaxonomyMatrixFile.append(String.valueOf(binaryItemTaxonomyMatrix[i][j]));
+					binaryItemTaxonomyMatrixFile.append(",");
+				}
+				binaryItemTaxonomyMatrixFile.append("\n");
+			}
+
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		
 		//Matrix.printMatrix(binaryItemTaxonomyMatrix);
 		
@@ -78,7 +120,7 @@ public class RecommenderSystem {
 		test3();
 		
 		
-		
+//		
 //		long startTime = System.nanoTime();
 //		
 //		test4(matrix, binaryItemTaxonomyMatrix);
@@ -89,6 +131,15 @@ public class RecommenderSystem {
 //		
 //		System.out.println("");
 //		System.out.println("Time= " + duration);
+		
+		
+//		for(int x = 80000; x < ratings.size(); x++)
+//		{
+//			System.out.println(ratings.get(x).getRating());
+//		}
+//
+//		
+//		maeMetric();
 		
 		
 	}
@@ -847,7 +898,7 @@ public class RecommenderSystem {
 	}
 	
 	// test Prediction Fusion Module
-	public static void test4(Double[][] supplierBuyerRatingMatrix, Double[][] binaryItemTaxonomyMatrix)
+	public static Double[][] test4(Double[][] supplierBuyerRatingMatrix, Double[][] binaryItemTaxonomyMatrix)
 	{
 
 		/////////////////////////////////////////////////////////////////////////////////////////
@@ -899,6 +950,30 @@ public class RecommenderSystem {
 //			System.out.println("]");
 //
 //		}
+		
+		// Write on file
+		
+		FileWriter eucfMatrixFile= null;
+		
+		try {
+			eucfMatrixFile = new FileWriter("eucfMatrix.csv");
+
+			for(int i = 0; i < eucfMatrix.length; i++)
+			{
+				for(int j= 0; j < eucfMatrix.length; j++)
+				{
+					eucfMatrixFile.append(String.valueOf(eucfMatrix[i][j]));
+					eucfMatrixFile.append(",");
+				}
+
+				eucfMatrixFile.append("\n");
+
+			}
+
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 		// B-B direct implicit trust matrix
 
@@ -924,18 +999,27 @@ public class RecommenderSystem {
 		//print B-B direct implicit trust matrix
 		System.out.println("");
 		System.out.println("B-B direct implicit trust matrix:");
+		
+		FileWriter trustMatrixFile= null;
+		
+		try 
+		{
+			trustMatrixFile = new FileWriter("trustMatrix.csv");
 
-//		for(int i = 0; i < trustMatrix.length; i++)
-//		{
-//			for(int j= 0; j < trustMatrix[i].length; j++)
-//			{
-//				if(j==0)
-//					System.out.print("[ ");
-//
-//				System.out.print(trustMatrix[i][j] + ", ");
-//			}
-//			System.out.println("]");
-//		}
+			for(int i = 0; i < trustMatrix.length; i++)
+			{
+				for(int j= 0; j < trustMatrix[i].length; j++)
+				{
+
+					trustMatrixFile.append(String.valueOf(trustMatrix[i][j]));
+					trustMatrixFile.append(",");
+				}
+				trustMatrixFile.append("\n");
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 		//B-B propagated implicit trust
 		WeightedMeanAggregationMethod wmam= new WeightedMeanAggregationMethod(0.15, 3);
@@ -959,17 +1043,27 @@ public class RecommenderSystem {
 		//print B-B propagated implicit trust matrix
 		System.out.println("");
 		System.out.println("B-B propagated implicit trust matrix:");
-//		for(int i = 0; i < trustMatrix.length; i++)
-//		{
-//			for(int j= 0; j < trustMatrix[i].length; j++)
-//			{
-//				if(j==0)
-//					System.out.print("[ ");
-//
-//				System.out.print(trustMatrix[i][j] + ", ");
-//			}
-//			System.out.println("]");
-//		}
+
+		FileWriter trustPropagationMatrixFile= null;
+
+		try 
+		{
+			trustPropagationMatrixFile = new FileWriter("trustPropagationMatrix.csv");
+
+			for(int i = 0; i < trustMatrix.length; i++)
+			{
+				for(int j= 0; j < trustMatrix[i].length; j++)
+				{
+
+					trustPropagationMatrixFile.append(String.valueOf(trustMatrix[i][j]));
+					trustPropagationMatrixFile.append(",");
+				}
+				trustPropagationMatrixFile.append("\n");
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
 		System.out.println("");
 		System.out.println("TeCF predicted supplier-buyer matrix:");
@@ -992,18 +1086,28 @@ public class RecommenderSystem {
 			}
 		}
 
-//		// show TeCF predicted supplier-buyer matrix
-//		for(int i= 0; i < tecfMatrix.length; i++)
-//		{
-//			for(int j= 0; j < tecfMatrix[i].length; j++)
-//			{
-//				if(j==0)
-//					System.out.print("[ ");
-//
-//				System.out.print(tecfMatrix[i][j] + ", ");
-//			}
-//			System.out.println("]");
-//		}
+		// show TeCF predicted supplier-buyer matrix
+		
+		FileWriter tecfMatrixFile= null;
+
+		try 
+		{
+			tecfMatrixFile = new FileWriter("tecfMatrix.csv");
+
+			for(int i= 0; i < tecfMatrix.length; i++)
+			{
+				for(int j= 0; j < tecfMatrix[i].length; j++)
+				{
+
+					tecfMatrixFile.append(String.valueOf(tecfMatrix[i][j]));
+					tecfMatrixFile.append(",");
+				}
+				tecfMatrixFile.append("\n");
+			}
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		
 		
@@ -1046,19 +1150,30 @@ public class RecommenderSystem {
 		System.out.println("Supplier-Supplier enhanced item-based CF similarity matrix:");
 		System.out.println("");
 		
-//		for(int i = 0; i < itemSimilarityMatrix.length; i++)
-//		{
-//			for(int j= 0; j < itemSimilarityMatrix.length; j++)
-//			{
-//				if(j == 0)
-//					System.out.print("[");
-//
-//				System.out.print(" " + itemSimilarityMatrix[i][j] + ",");
-//			}
-//			
-//			System.out.println("]");
-//			
-//		}
+		FileWriter itemSimilarityMatrixFile= null;
+
+		try 
+		{
+			itemSimilarityMatrixFile = new FileWriter("itemSimilarityMatrix.csv");
+
+			for(int i = 0; i < itemSimilarityMatrix.length; i++)
+			{
+				for(int j= 0; j < itemSimilarityMatrix.length; j++)
+				{
+					
+
+					itemSimilarityMatrixFile.append(String.valueOf(itemSimilarityMatrix[i][j]));
+					itemSimilarityMatrixFile.append(",");
+				}
+
+				itemSimilarityMatrixFile.append("\n");
+
+			}
+
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		// Supplier-Supplier semantic similarity matrix
 		
@@ -1080,19 +1195,31 @@ public class RecommenderSystem {
 			}
 		}
 		
-//		// print Supplier-Supplier semantic similarity matrix
-//		for(int i = 0; i < bjsmMatrix.length; i++)
-//		{
-//			for(int j= 0; j < bjsmMatrix[i].length; j++)
-//			{
-//				if(j == 0)
-//					System.out.print("[ ");
-//				System.out.print(bjsmMatrix[i][j] + ", ");
-//				
-//			}
-//			System.out.println("]");
-//			
-//		}
+		// print Supplier-Supplier semantic similarity matrix
+		
+		FileWriter bjsmMatrixFile= null;
+
+		try 
+		{
+			bjsmMatrixFile = new FileWriter("bjsmMatrix.csv");
+
+			for(int i = 0; i < bjsmMatrix.length; i++)
+			{
+				for(int j= 0; j < bjsmMatrix[i].length; j++)
+				{
+					
+					bjsmMatrixFile.append(String.valueOf(bjsmMatrix[i][j]));
+					bjsmMatrixFile.append(",");
+
+				}
+				bjsmMatrixFile.append("\n");
+
+			}
+
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		// Supplier Reputation Matrix
 		
@@ -1111,16 +1238,27 @@ public class RecommenderSystem {
 			itemReputationMatrix[i]= itemReputation.result(i, supplierBuyerRatingMatrix);
 		}
 
-//		// print Supplier-Supplier semantic similarity matrix
-//		
-//		for(int j= 0; j < itemReputationMatrix.length; j++)
-//		{
-//			if(j == 0)
-//				System.out.print("[ ");
-//			System.out.print(itemReputationMatrix[j] + ", ");
-//
-//		}
-//		System.out.println("]");
+		// print Supplier-Supplier semantic similarity matrix
+		
+		FileWriter itemReputationMatrixFile= null;
+
+		try 
+		{
+			itemReputationMatrixFile = new FileWriter("itemReputationMatrix.csv");
+
+			for(int j= 0; j < itemReputationMatrix.length; j++)
+			{
+				
+				itemReputationMatrixFile.append(String.valueOf(itemReputationMatrix[j]));
+				itemReputationMatrixFile.append(",");
+
+			}
+			itemReputationMatrixFile.append("\n");
+
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		
 		System.out.println("");
@@ -1144,18 +1282,29 @@ public class RecommenderSystem {
 			}
 		}
 		
-//		// show TeCF predicted supplier-buyer matrix
-//		for(int i= 0; i < secfMatrix.length; i++)
-//		{
-//			for(int j= 0; j < secfMatrix[i].length; j++)
-//			{
-//				if(j==0)
-//					System.out.print("[ ");
-//				
-//				System.out.print(secfMatrix[i][j] + ", ");
-//			}
-//			System.out.println("]");
-//		}
+		// show TeCF predicted supplier-buyer matrix
+		
+		FileWriter secfMatrixFile= null;
+
+		try 
+		{
+			secfMatrixFile = new FileWriter("secfMatrix.csv");
+
+			for(int i= 0; i < secfMatrix.length; i++)
+			{
+				for(int j= 0; j < secfMatrix[i].length; j++)
+				{
+
+					secfMatrixFile.append(String.valueOf(secfMatrix[i][j]));
+					secfMatrixFile.append(",");
+				}
+				secfMatrixFile.append("\n");
+			}
+
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		
 		/////////////////////////////////////////////////////////////////////////////////////////
@@ -1188,20 +1337,124 @@ public class RecommenderSystem {
 			}
 		}
 		
-		// print Predicted User-Item Rating Matrix
-		for(int i= 0; i < predictedUserItemRatingMatrix.length; i++)
+		
+		FileWriter predictedUserItemRatingMatrixFile= null;
+
+		try 
 		{
-			for(int j= 0; j < predictedUserItemRatingMatrix[i].length; j++)
+			predictedUserItemRatingMatrixFile = new FileWriter("predictedUserItemRatingMatrix.csv");
+
+			// print Predicted User-Item Rating Matrix
+			for(int i= 0; i < predictedUserItemRatingMatrix.length; i++)
 			{
-				if(j==0)
-					System.out.print("[ ");
-				
-				System.out.print(predictedUserItemRatingMatrix[i][j] + ", ");
+				for(int j= 0; j < predictedUserItemRatingMatrix[i].length; j++)
+				{
+					predictedUserItemRatingMatrixFile.append(String.valueOf(predictedUserItemRatingMatrix[i][j]));
+					predictedUserItemRatingMatrixFile.append(",");
+				}
+				predictedUserItemRatingMatrixFile.append("\n");
 			}
-			System.out.println("]");
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return predictedUserItemRatingMatrix;
+
+
+	}
+	
+	public static void maeMetric()
+	{
+		//Get Ratings Matrix
+		System.out.println("Ratings Matrix");
+		Double [][]matrix = Matrix.getRatingsMatrix(943, 1682, 80000);
+
+		FileWriter ratingsMatrixFile= null;
+
+		try {
+			ratingsMatrixFile = new FileWriter("ratingsMatrix.csv");
+
+			for(int i= 0; i < matrix.length; i++)
+			{
+				for(int j= 0; j < matrix[i].length; j++)
+				{
+					ratingsMatrixFile.append(String.valueOf(matrix[i][j]));
+					ratingsMatrixFile.append(",");
+				}
+				ratingsMatrixFile.append("\n");
+			}
+
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 
 
+
+		// obtain binaryItemTaxonomyMatrix
+
+		Double[][] binaryItemTaxonomyMatrix = Matrix.getItemTaxonomyMatrix();
+
+		FileWriter binaryItemTaxonomyMatrixFile= null;
+
+		try {
+			binaryItemTaxonomyMatrixFile = new FileWriter("binaryItemTaxonomyMatrix.csv");
+
+			for(int i= 0; i < binaryItemTaxonomyMatrix.length; i++)
+			{
+				for(int j= 0; j < binaryItemTaxonomyMatrix[i].length; j++)
+				{
+					binaryItemTaxonomyMatrixFile.append(String.valueOf(binaryItemTaxonomyMatrix[i][j]));
+					binaryItemTaxonomyMatrixFile.append(",");
+				}
+				binaryItemTaxonomyMatrixFile.append("\n");
+			}
+
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+
+		//Matrix.printMatrix(binaryItemTaxonomyMatrix);
+
+		System.out.println("");
+		System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+		System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+		System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+		System.out.println("");
+
+		//Recommender System TSF
+		//				test3();
+
+
+
+		long startTime = System.nanoTime();
+		
+		EvaluationMetrics evaluationMetrics= new EvaluationMetrics();
+
+		Double[][] predictionsMatrix= test4(matrix, binaryItemTaxonomyMatrix);
+
+		long endTime = System.nanoTime();
+
+		long duration = (endTime - startTime) / 1000000000;
+		
+		ArrayList<Rating> testData= new ArrayList<Rating>();
+		
+		for(int x = 80000; x < ratings.size(); x++)
+		{
+			testData.add(ratings.get(x));
+		}
+		
+		double maeValue = evaluationMetrics.meanAbsoluteError(predictionsMatrix, testData);
+
+		System.out.println("");
+		System.out.println("Time= " + duration);
+		System.out.println("");
+		System.out.println("");
+		System.out.println("MAE= " + maeValue);
+		
 	}
 
 }

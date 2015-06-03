@@ -12,13 +12,13 @@ public class Matrix {
 	//u2
 	//u3
 	
-	public static Double [][] getRatingsMatrix(){//-1 significa que nao tem calssificaçao
-		Double[][]matrix=new Double[943/*10*/][1682/*10*/];//so para ser facil testar
-		
-		for(int i=0; i<RecommenderSystem.ratings.size(); i++){
+	public static Double [][] getRatingsMatrix(int maxUserId, int maxItemId, int numberOfRatings){//-1 significa que nao tem calssificaçao
+		Double[][]matrix=new Double[maxUserId][maxItemId];
+
+		for(int i=0; i<numberOfRatings; i++){
 			int userId=RecommenderSystem.ratings.get(i).getUser().getId();
 			int itemId=RecommenderSystem.ratings.get(i).getItem().getId();
-			if(userId<10 && itemId<10){//so para teste-para nao dar erro
+			if(userId<maxUserId && itemId<maxItemId){
 				matrix[userId-1][itemId-1]=(double)RecommenderSystem.ratings.get(i).getRating();
 			}
 		}
