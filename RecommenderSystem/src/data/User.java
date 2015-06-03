@@ -1,6 +1,8 @@
 package data;
 
-public class User {
+import java.io.Serializable;
+
+public class User implements Serializable {
 	private int id;
 	private int age;
 	private Boolean genre;//0-male/1-female

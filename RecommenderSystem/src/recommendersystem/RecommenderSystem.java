@@ -1,5 +1,12 @@
 package recommendersystem;
 
+
+import jade.core.Profile;
+import jade.core.ProfileImpl;
+import jade.core.Runtime;
+import jade.wrapper.StaleProxyException;
+import jade.wrapper.AgentContainer;
+
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -14,15 +21,15 @@ import tsf.PearsonCorrelation;
 import tsf.TrustSemanticFusion;
 import tsf.WeightedMeanAggregationMethod;
 import tsf.WeightedPredictor;
+import utilities.File;
+import utilities.Matrix;
+import agents.ClientAgent;
+import agents.RecommenderAgent;
 import data.Genre;
 import data.Item;
 import data.Rating;
 import data.User;
 import evaluation.EvaluationMetrics;
-import tars.DynamicTrustPheromone;
-import tars.RecommendationProcess;
-import utilities.File;
-import utilities.Matrix;
 
 
 public class RecommenderSystem {
@@ -33,8 +40,20 @@ public class RecommenderSystem {
 	public static ArrayList<Rating> ratings= new ArrayList<Rating>();
 	
 	public static Double [][] tars_ratings;
+	
+	private static Runtime runtime;
+
+	private static AgentContainer container;
+
+	protected static RecommenderAgent recommenderAgent;
+
+	protected static ClientAgent clientAgent;
+	
+	protected static ClientAgent clientAgent2;
+	
 
 	public static void main(String[] args) {
+		
 		System.out.println("Recommender System");
 		
 		//Read data from database
@@ -49,97 +68,151 @@ public class RecommenderSystem {
 		System.out.println("Ratings Matrix");
 		Double [][]matrix = Matrix.getRatingsMatrix(943, 1682, 100000);
 		
-		FileWriter ratingsMatrixFile= null;
+		runtime = jade.core.Runtime.instance();
+		
+		// Add agent
+		Profile profile = new ProfileImpl();
+		profile.setParameter("gui", "true");
+		profile.setParameter("port", "8000");
 
-		try {
-			ratingsMatrixFile = new FileWriter("ratingsMatrix.csv");
-			
-			for(int i= 0; i < matrix.length; i++)
-			{
-				for(int j= 0; j < matrix[i].length; j++)
-				{
-					ratingsMatrixFile.append(String.valueOf(matrix[i][j]));
-					ratingsMatrixFile.append(",");
-				}
-				ratingsMatrixFile.append("\n");
-			}
+		container = runtime.createMainContainer(profile);
 
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
+		recommenderAgent = new RecommenderAgent();
+		try
+		{
+			container.acceptNewAgent("RecommenderAgent", recommenderAgent).start();
+		}
+		catch (StaleProxyException e)
+		{
+			e.printStackTrace();
+		}
+		
+		clientAgent = new ClientAgent();
+		try
+		{
+			container.acceptNewAgent("ClientAgent", clientAgent).start();
+		}
+		catch (StaleProxyException e)
+		{
+			e.printStackTrace();
+		}
+		
+		clientAgent2 = new ClientAgent();
+		try
+		{
+			container.acceptNewAgent("ClientAgent2", clientAgent2).start();
+		}
+		catch (StaleProxyException e)
+		{
 			e.printStackTrace();
 		}
 		
 		
-		//Matrix.printMatrix(matrix);
-		
-//		//Get Normalized Ratings Matrix
-//		System.out.println("Normalized Ratings Matrix");
-//		tars_ratings = Matrix.getNormalizedRatingsMatrix(matrix);
-//		Matrix.printMatrix(tars_ratings);
+//		System.out.println("Recommender System");
 //		
-//		//Testing TARS
-//		DynamicTrustPheromone dtp = new DynamicTrustPheromone(4, tars_ratings);
-//		RecommendationProcess rp = new RecommendationProcess(1,dtp, tars_ratings);
-//		System.out.println("Trust Intensity calculated!");
-//		Matrix.printMatrix(tars_ratings);
-		
-		// obtain binaryItemTaxonomyMatrix
-		
-		Double[][] binaryItemTaxonomyMatrix = Matrix.getItemTaxonomyMatrix();
-		
-		FileWriter binaryItemTaxonomyMatrixFile= null;
-
-		try {
-			binaryItemTaxonomyMatrixFile = new FileWriter("binaryItemTaxonomyMatrix.csv");
-			
-			for(int i= 0; i < binaryItemTaxonomyMatrix.length; i++)
-			{
-				for(int j= 0; j < binaryItemTaxonomyMatrix[i].length; j++)
-				{
-					binaryItemTaxonomyMatrixFile.append(String.valueOf(binaryItemTaxonomyMatrix[i][j]));
-					binaryItemTaxonomyMatrixFile.append(",");
-				}
-				binaryItemTaxonomyMatrixFile.append("\n");
-			}
-
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		
-		//Matrix.printMatrix(binaryItemTaxonomyMatrix);
-		
-		System.out.println("");
-		System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
-		System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
-		System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
-		System.out.println("");
-		
-		//Recommender System TSF
-		test3();
-		
-		
-//		
-//		long startTime = System.nanoTime();
-//		
-//		test4(matrix, binaryItemTaxonomyMatrix);
+//		//Read data from database
+//		File file = new File();
+//		file.read("user");
+//		file.read("genre");
+//		file.read("item");
+//		file.read("data");
+//		System.out.println("Database readed");
 //
-//		long endTime = System.nanoTime();
+//		//Get Ratings Matrix
+//		System.out.println("Ratings Matrix");
+//		Double [][]matrix = Matrix.getRatingsMatrix(943, 1682, 100000);
 //		
-//		long duration = (endTime - startTime) / 1000000000;
+//		FileWriter ratingsMatrixFile= null;
+//
+//		try {
+//			ratingsMatrixFile = new FileWriter("ratingsMatrix.csv");
+//			
+//			for(int i= 0; i < matrix.length; i++)
+//			{
+//				for(int j= 0; j < matrix[i].length; j++)
+//				{
+//					ratingsMatrixFile.append(String.valueOf(matrix[i][j]));
+//					ratingsMatrixFile.append(",");
+//				}
+//				ratingsMatrixFile.append("\n");
+//			}
+//
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		
+//		
+//		//Matrix.printMatrix(matrix);
+//		
+////		//Get Normalized Ratings Matrix
+////		System.out.println("Normalized Ratings Matrix");
+////		tars_ratings = Matrix.getNormalizedRatingsMatrix(matrix);
+////		Matrix.printMatrix(tars_ratings);
+////		
+////		//Testing TARS
+////		DynamicTrustPheromone dtp = new DynamicTrustPheromone(4, tars_ratings);
+////		RecommendationProcess rp = new RecommendationProcess(1,dtp, tars_ratings);
+////		System.out.println("Trust Intensity calculated!");
+////		Matrix.printMatrix(tars_ratings);
+//		
+//		// obtain binaryItemTaxonomyMatrix
+//		
+//		Double[][] binaryItemTaxonomyMatrix = Matrix.getItemTaxonomyMatrix();
+//		
+//		FileWriter binaryItemTaxonomyMatrixFile= null;
+//
+//		try {
+//			binaryItemTaxonomyMatrixFile = new FileWriter("binaryItemTaxonomyMatrix.csv");
+//			
+//			for(int i= 0; i < binaryItemTaxonomyMatrix.length; i++)
+//			{
+//				for(int j= 0; j < binaryItemTaxonomyMatrix[i].length; j++)
+//				{
+//					binaryItemTaxonomyMatrixFile.append(String.valueOf(binaryItemTaxonomyMatrix[i][j]));
+//					binaryItemTaxonomyMatrixFile.append(",");
+//				}
+//				binaryItemTaxonomyMatrixFile.append("\n");
+//			}
+//
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
+//		
+//		
+//		//Matrix.printMatrix(binaryItemTaxonomyMatrix);
 //		
 //		System.out.println("");
-//		System.out.println("Time= " + duration);
-		
-		
-//		for(int x = 80000; x < ratings.size(); x++)
-//		{
-//			System.out.println(ratings.get(x).getRating());
-//		}
-//
+//		System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+//		System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+//		System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+//		System.out.println("");
 //		
-//		maeMetric();
+//		//Recommender System TSF
+//		test3();
+//		
+//		
+////		
+////		long startTime = System.nanoTime();
+////		
+////		test4(matrix, binaryItemTaxonomyMatrix);
+////
+////		long endTime = System.nanoTime();
+////		
+////		long duration = (endTime - startTime) / 1000000000;
+////		
+////		System.out.println("");
+////		System.out.println("Time= " + duration);
+//		
+//		
+////		for(int x = 80000; x < ratings.size(); x++)
+////		{
+////			System.out.println(ratings.get(x).getRating());
+////		}
+////
+////		
+////		maeMetric();
 		
 		
 	}

@@ -1,6 +1,8 @@
 package data;
 
-public class Genre {
+import java.io.Serializable;
+
+public class Genre implements Serializable {
 	private int id;
 	private String genre;
 	

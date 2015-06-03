@@ -1,8 +1,10 @@
 package data;
 
+import java.io.Serializable;
+
 import recommendersystem.RecommenderSystem;
 
-public class Rating {
+public class Rating implements Serializable {
 	
 	private User user;
 	private Item item;

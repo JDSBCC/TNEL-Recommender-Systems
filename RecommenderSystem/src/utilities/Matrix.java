@@ -1,10 +1,11 @@
 package utilities;
 
+import java.io.Serializable;
 import java.text.DecimalFormat;
 
 import recommendersystem.RecommenderSystem;
 
-public class Matrix {
+public class Matrix implements Serializable {
 	
 	//Matrix form
 	//  i1  i2  i3  i4
