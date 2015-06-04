@@ -18,14 +18,7 @@ public class Rating_menu extends Application{
 	private Scene scene;
 	private Button classify, historic, newRec;
 	
-	public static ClientAgent clientAgent;
-	
 	public Rating_menu(){
-	}
-	
-	public void setAgent(ClientAgent clientAgent)
-	{
-		this.clientAgent= clientAgent;
 	}
 
     @Override

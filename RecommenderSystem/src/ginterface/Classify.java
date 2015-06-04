@@ -5,6 +5,8 @@ import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
@@ -22,15 +24,18 @@ import javafx.stage.Stage;
 import java.util.ArrayList;
 
 import data.Item;
+import data.Rating;
 import recommendersystem.RecommenderSystem;
 
 
 public class Classify {
 
     private Scene scene;
+    private Stage primaryStage;
 
     public Classify(final Stage primaryStage){
     	
+    	this.primaryStage=primaryStage;
     	//RecommenderSystem.items;
 
         primaryStage.setTitle("Recommender System");
@@ -57,7 +62,18 @@ public class Classify {
         Label title = new Label("Classify the movies");
         title.setId("title");
         
-        hbox.getChildren().addAll(title);
+        Button back=new Button("Return");
+        back.setId("back");
+        back.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                Rating_menu rm = new Rating_menu();
+                rm.init(primaryStage);
+                primaryStage.setScene(rm.getScene());
+            }
+        });
+        
+        hbox.getChildren().addAll(title, back);
         return hbox;
     }
     
@@ -69,7 +85,7 @@ public class Classify {
         vb.setMaxWidth(585);
         vb.setMinWidth(585);
         vb.setId("list");
-        for (int i = 0; i < /*RecommenderSystem.items.size()*/100; i++) {
+        for (int i = 0; i < RecommenderSystem.num_items;i++) {
         	vb.getChildren().add(getMovie(RecommenderSystem.items.get(i)));
         }
 
@@ -80,7 +96,7 @@ public class Classify {
         return scroll;
     }
     
-    public HBox getMovie(Item item){
+    public HBox getMovie(final Item item){
     	HBox hbox = new HBox();
     	hbox.setId("hbox");
     	hbox.setSpacing(10);
@@ -98,7 +114,7 @@ public class Classify {
         vb.getChildren().addAll(title, date, genres, imdb);
         
         //Rating
-        int rat = RecommenderSystem.getRatingsByUserItem(4, item);//active user
+        int rat = RecommenderSystem.getRatingsByUserItem(RecommenderSystem.activeUser, item);//active user
         if(rat!=0){
             Label rating = new Label(rat+"");
             rating.setId("rating");
@@ -109,23 +125,21 @@ public class Classify {
         
         //Classify the movie
         if(rat==0){
-        	ChoiceBox cb = new ChoiceBox(FXCollections.observableArrayList(1,2,3,4,5));
+        	final ChoiceBox cb = new ChoiceBox(FXCollections.observableArrayList(1,2,3,4,5));
 
 
         	cb.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
         		@Override
         		public void changed(ObservableValue<? extends Number> observableValue, Number number, Number number2) {
-//        			
-//        			Platform.runLater(new Runnable() {
-//        				  @Override public void run() {
-//        					  RecommenderSystem.clientAgent.sendRating();
-//        				  }
-//        				});
-//        			
-        			Rating_menu.clientAgent.sendRating();
+        			String value = cb.getItems().get((Integer) number2).toString();
+                	int rate=Integer.parseInt(value);
+        			RecommenderSystem.clientAgent.sendRating(RecommenderSystem.activeUser,item.getId(),rate);
         			
-        				
-        		    
+        			for(int i = 0; i<RecommenderSystem.ratings.size();i++){
+        				if(RecommenderSystem.ratings.get(i).getUser().getId()==RecommenderSystem.activeUser && item.getId()==RecommenderSystem.ratings.get(i).getItem().getId()){
+        					RecommenderSystem.ratings.set(i, new Rating(RecommenderSystem.activeUser, item.getId(), rate, "123456"));
+        				}
+        			}
         			
         		}
         	});

@@ -50,9 +50,9 @@ public class ClientAgent extends Agent {
 
 		//TODO When active user have rated an item call this 
 		
-//		Rating myRating= new Rating(1,2,3,"1234556");
-//		
-//		addBehaviour(new SearchRecommenderAgents(this, 1000, myRating));
+		//Rating myRating= new Rating(1,2,3,"1234556");
+		
+		//addBehaviour(new SearchRecommenderAgents(this, 1000, myRating));
 		
 		// always ready to receive updated recommendations
 		addBehaviour(new ReceiveRecommendations());
@@ -175,9 +175,9 @@ public class ClientAgent extends Agent {
 		}
 	}
 	
-	public void sendRating()
+	public void sendRating(int idUser, int idItem, int rating)
 	{
-		Rating myRating= new Rating(1,2,3,"1234556");
+		Rating myRating= new Rating(idUser,idItem,rating,"1234556");
 
 		addBehaviour(new SearchRecommenderAgents(this, 1000, myRating));
 	}

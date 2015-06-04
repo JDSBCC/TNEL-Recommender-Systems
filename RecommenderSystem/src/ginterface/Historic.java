@@ -58,7 +58,7 @@ public class Historic {
             public void changed(ObservableValue<? extends Number> observableValue, Number number, Number number2) {
             	String value = cb.getItems().get((Integer) number2).toString().replaceAll("[^0-9]", "");
             	user=Integer.parseInt(value);
-            	System.out.println(value);
+            	//System.out.println(value);
 				Historic h = new Historic(primaryStage);
 				primaryStage.setScene(h.getScene());
             }

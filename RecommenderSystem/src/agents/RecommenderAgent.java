@@ -24,12 +24,19 @@ import jade.domain.FIPAAgentManagement.ServiceDescription;
 
 public class RecommenderAgent extends Agent {
 	
+	Double[][] binaryItemTaxonomyMatrix;
+	Double[][] matrix;
+	
 	
 
 	// Put agent initializations here
 	protected void setup() {
 		
 		System.out.println("[a] Hello, I'm the Recommender Agent!");
+		
+		matrix = Matrix.getRatingsMatrix(RecommenderSystem.num_users, RecommenderSystem.num_items, RecommenderSystem.ratings.size());
+
+		binaryItemTaxonomyMatrix = Matrix.getItemTaxonomyMatrix(RecommenderSystem.num_items, 19);
 
 		// Register the book-selling service in the yellow pages
 		DFAgentDescription dfd = new DFAgentDescription();
@@ -85,6 +92,8 @@ public class RecommenderAgent extends Agent {
 				
 				// TODO update matrix
 				
+				matrix[rating.getUser().getId() - 1][rating.getItem().getId() - 1] = (double) rating.getRating();
+				
 				addBehaviour(new SearchClientAgents(myAgent, 1000, rating));
 
 			}
@@ -112,13 +121,11 @@ public class RecommenderAgent extends Agent {
 			
 			//TODO calculate recommendations
 			
-			Double [][]matrix = Matrix.getRatingsMatrix(10, 20, 100);
+			
 
-			Double[][] binaryItemTaxonomyMatrix = Matrix.getItemTaxonomyMatrix(20, 19);
-
-			Double[] predictionsMatrix= RecommenderSystem.test5(rating.getUser().getId() - 1, matrix, binaryItemTaxonomyMatrix);
-
-			ArrayList<Item> recommendationsList= topNRecommendations(2, predictionsMatrix);
+			Double[] predictionsMatrix= RecommenderSystem.activeUserTSFPredictions(rating.getUser().getId() - 1, matrix, binaryItemTaxonomyMatrix);
+			
+			ArrayList<Item> recommendationsList= topNRecommendations(20, predictionsMatrix);
 			
 			Recommendation recommendation = new Recommendation(recommendationsList);
 
