@@ -58,6 +58,6 @@ public class User implements Serializable {
 	}
 	
 	public String toString(){
-		return id+"|"+age+"|"+genre+"|"+occupation+"|"+zipcode;
+		return "User: " + id;
 	}
 }

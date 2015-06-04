@@ -83,10 +83,20 @@ public class Item implements Serializable {
 		String string=id+"|"+title+"|"+releaseDate+"|"+videoReleaseDate+"|"+imdbUrl;
 		for(int i=0; i<genre.length;i++){
 			if(genre[i]!=null){
-				string += "|"+genre[i].getId();
+				string += "|"+genre[i].getGenre();
 			}
 		}
 		return string;
+	}
+	
+	public String getGenreString(){
+		String string="";
+		for(int i=0; i<genre.length;i++){
+			if(genre[i].getId()!=0){
+				string += genre[i].getGenre()+", ";
+			}
+		}
+		return string.substring(0, string.length()-2);
 	}
 	
 	

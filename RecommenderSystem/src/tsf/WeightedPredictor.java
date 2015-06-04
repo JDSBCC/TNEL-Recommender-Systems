@@ -18,6 +18,7 @@ public class WeightedPredictor {
 
 		int numberUserARatedItems= 0;
 		
+		
 		for(int i= 0; i < userARatings.length; i++)
 		{
 			// items rated by user A
@@ -28,6 +29,7 @@ public class WeightedPredictor {
 				ratingSumUserA += userARatings[i];
 			}
 		}
+		
 		
 		//average rating values of user x on all items that he has rated, independently of other users ratings
 		//mean(Rx)
@@ -40,6 +42,7 @@ public class WeightedPredictor {
 
 		// N^(eUCF)
 		Integer[] selectedNeighborsBySimilarity= topNMethod(3, userA, eucfMatrix[userA]);
+		
 
 		for(int i= 0; i < selectedNeighborsBySimilarity.length; i++)
 		{
@@ -58,6 +61,7 @@ public class WeightedPredictor {
 				int numberUserBRatedItems= 0;
 
 				Double userBRatingOnTargetItem= null;
+	
 
 				for(int k= 0; k < userBRatings.length; k++)
 				{
@@ -73,6 +77,7 @@ public class WeightedPredictor {
 						userBRatingOnTargetItem= userBRatings[k];
 
 				}
+				
 
 				if(userBRatingOnTargetItem != null)
 				{
@@ -199,7 +204,7 @@ public class WeightedPredictor {
 		double similarityDenominator= 0.0;
 
 		// N^(eICF)
-		Integer[] selectedNeighborsByItemBasedSimilarity= topNMethod(4, item, eicfMatrix[item]);
+		Integer[] selectedNeighborsByItemBasedSimilarity= topNMethod(2, item, eicfMatrix[item]);
 
 		for(int i= 0; i < selectedNeighborsByItemBasedSimilarity.length; i++)
 		{
@@ -271,7 +276,7 @@ public class WeightedPredictor {
 		double ssDenominator= 0.0;
 
 		// N^(SemanticSimilarity)
-		Integer[] selectedNeighborsBySS= topNMethod(4, item, semanticSimilarityMatrix[item]);
+		Integer[] selectedNeighborsBySS= topNMethod(2, item, semanticSimilarityMatrix[item]);
 
 		for(int i= 0; i < selectedNeighborsBySS.length; i++)
 		{

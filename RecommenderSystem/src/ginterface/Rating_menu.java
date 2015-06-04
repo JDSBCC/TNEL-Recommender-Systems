@@ -1,5 +1,6 @@
 package ginterface;
 
+import agents.ClientAgent;
 import javafx.application.Application;
 import javafx.event.*;
 import javafx.geometry.Insets;
@@ -15,10 +16,16 @@ import javafx.stage.Stage;
 public class Rating_menu extends Application{
 	
 	private Scene scene;
-	private Button start;
-
-	public static void main(String[] args) {
-		launch(args);
+	private Button classify, historic, newRec;
+	
+	public static ClientAgent clientAgent;
+	
+	public Rating_menu(){
+	}
+	
+	public void setAgent(ClientAgent clientAgent)
+	{
+		this.clientAgent= clientAgent;
 	}
 
     @Override
@@ -51,14 +58,31 @@ public class Rating_menu extends Application{
         FlowPane flow3 =new FlowPane();
         flow3.setPadding(new Insets(50,0,0,0));
         flow3.setAlignment(Pos.CENTER);
-        start = new Button("Start");
-        start.setOnAction(new EventHandler<ActionEvent>() {
+        classify = new Button("Classify the movies");
+        classify.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                //Do something
+                Classify ml = new Classify(primaryStage);
+                primaryStage.setScene(ml.getScene());
             }
         });
-        flow3.getChildren().add(start);
+        historic = new Button("Show movies historic");
+        historic.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                Historic h = new Historic(primaryStage);
+                primaryStage.setScene(h.getScene());
+            }
+        });
+        newRec = new Button("See algorithms recommendations");
+        newRec.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                NewClassification nc = new NewClassification(primaryStage);
+                primaryStage.setScene(nc.getScene());
+            }
+        });
+        flow3.getChildren().addAll(classify, historic, newRec);
 
         BorderPane root = new BorderPane();
         root.setId("scene");
@@ -66,7 +90,7 @@ public class Rating_menu extends Application{
         root.setCenter(flow2);
         root.setBottom(flow3);
 
-        scene = new Scene(root, 400, 300);
+        scene = new Scene(root, 600, 600);
         scene.getStylesheets().add("css/mainmenu.css");
     }
 

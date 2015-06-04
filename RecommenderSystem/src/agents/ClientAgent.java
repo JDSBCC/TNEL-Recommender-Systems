@@ -1,6 +1,13 @@
 package agents;
 
+import ginterface.Rating_menu;
+
 import java.io.IOException;
+
+import javafx.application.Platform;
+import recommendersystem.RecommenderSystem;
+
+import utilities.Recommendation;
 
 import data.Rating;
 import jade.core.AID;
@@ -26,6 +33,7 @@ public class ClientAgent extends Agent {
 		// Printout a welcome message
 		System.out.println("Hello! Client Agent "+getAID().getName()+" is ready.");
 
+
 		// Register the movie recommender system client service in the yellow pages
 		DFAgentDescription dfd = new DFAgentDescription();
 		dfd.setName(getAID());
@@ -42,9 +50,9 @@ public class ClientAgent extends Agent {
 
 		//TODO When active user have rated an item call this 
 		
-		Rating myRating= new Rating(1,2,3,"1234556");
-		
-		addBehaviour(new SearchRecommenderAgents(this, 1000, myRating));
+//		Rating myRating= new Rating(1,2,3,"1234556");
+//		
+//		addBehaviour(new SearchRecommenderAgents(this, 1000, myRating));
 		
 		// always ready to receive updated recommendations
 		addBehaviour(new ReceiveRecommendations());
@@ -143,19 +151,36 @@ public class ClientAgent extends Agent {
 			ACLMessage msg = myAgent.receive(mt);
 			if (msg != null) {
 				// Inform Message received. Process it
-				String recommendation = null;
+				Recommendation recommendation = null;
 				
-				recommendation = msg.getContent();
+				try {
+					recommendation = (Recommendation) msg.getContentObject();
+				} catch (UnreadableException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 				
 				System.out.println("Received from " + msg.getSender().getName() + ":");
-				System.out.println(recommendation);
+
+
+				for(int i= 0; i < recommendation.getRecommendedItems().size(); i++)
+				{
+					System.out.println(recommendation.getRecommendedItems().get(i).toString());
+				}
 				
 			}
 			else {
 				block();
 			}
 		}
-	}  
+	}
+	
+	public void sendRating()
+	{
+		Rating myRating= new Rating(1,2,3,"1234556");
+
+		addBehaviour(new SearchRecommenderAgents(this, 1000, myRating));
+	}
 	
 
 }

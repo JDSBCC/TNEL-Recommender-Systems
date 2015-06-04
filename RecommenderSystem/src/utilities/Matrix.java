@@ -72,10 +72,12 @@ public class Matrix implements Serializable {
 	//i2
 	//i3
 	
-	public static Double [][] getItemTaxonomyMatrix(){
-		Double[][] matrix = new Double[1682/*10*/][19];
+	public static Double [][] getItemTaxonomyMatrix(int maxItemId, int maxCategoryId){
+//		Double[][] matrix = new Double[1682/*10*/][19];
 		
-		for(int i=0; i<RecommenderSystem.items.size()/*10*/; i++){
+		Double[][] matrix = new Double[maxItemId][maxCategoryId];
+		
+		for(int i=0; i<maxItemId; i++){
 			
 			Double[] binaryItemTaxonomy= RecommenderSystem.items.get(i).getBinaryItemSemantic();
 			
