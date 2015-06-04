@@ -25,13 +25,14 @@ public class ClientAgent extends Agent {
 	
 	// The list of known recommender agents
 	private AID[] recommenderAgents;
+	public static Recommendation recommendation;
 
 
 	// Put agent initializations here
 	protected void setup() {
 
 		// Printout a welcome message
-		System.out.println("Hello! Client Agent "+getAID().getName()+" is ready.");
+		//System.out.println("Hello! Client Agent "+getAID().getName()+" is ready.");
 
 
 		// Register the movie recommender system client service in the yellow pages
@@ -70,7 +71,7 @@ public class ClientAgent extends Agent {
 		}
 
 		// Printout a dismissal message
-		System.out.println("Client-agent "+getAID().getName()+" terminating.");
+		//System.out.println("Client-agent "+getAID().getName()+" terminating.");
 	}
 
 	// Add a TickerBehaviour that search for recommender agents every minute
@@ -92,11 +93,11 @@ public class ClientAgent extends Agent {
 			dfd.addServices(sd);
 			try {
 				DFAgentDescription[] result = DFService.search(myAgent, dfd); 
-				System.out.println("Found the following recommender agents:");
+				//System.out.println("Found the following recommender agents:");
 				recommenderAgents = new AID[result.length];
 				for (int i = 0; i < result.length; ++i) {
 					recommenderAgents[i] = result[i].getName();
-					System.out.println(recommenderAgents[i].getName());
+					//System.out.println(recommenderAgents[i].getName());
 				}
 			}
 			catch (FIPAException fe) {
@@ -151,7 +152,7 @@ public class ClientAgent extends Agent {
 			ACLMessage msg = myAgent.receive(mt);
 			if (msg != null) {
 				// Inform Message received. Process it
-				Recommendation recommendation = null;
+				recommendation = null;
 				
 				try {
 					recommendation = (Recommendation) msg.getContentObject();
@@ -160,13 +161,13 @@ public class ClientAgent extends Agent {
 					e.printStackTrace();
 				}
 				
-				System.out.println("Received from " + msg.getSender().getName() + ":");
+				//System.out.println("Received from " + msg.getSender().getName() + ":");
 
 
-				for(int i= 0; i < recommendation.getRecommendedItems().size(); i++)
+				/*for(int i= 0; i < recommendation.getRecommendedItems().size(); i++)
 				{
-					System.out.println(recommendation.getRecommendedItems().get(i).toString());
-				}
+					System.out.println("Recommended movie " + recommendation.getRecommendedItems().get(i).getFirst().toString() + "with rating " + recommendation.getRecommendedItems().get(i).getSecond());
+				}*/
 				
 			}
 			else {

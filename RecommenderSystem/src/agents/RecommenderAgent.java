@@ -32,7 +32,7 @@ public class RecommenderAgent extends Agent {
 	// Put agent initializations here
 	protected void setup() {
 		
-		System.out.println("[a] Hello, I'm the Recommender Agent!");
+		//System.out.println("[a] Hello, I'm the Recommender Agent!");
 		
 		matrix = Matrix.getRatingsMatrix(RecommenderSystem.num_users, RecommenderSystem.num_items, RecommenderSystem.ratings.size());
 
@@ -68,7 +68,7 @@ public class RecommenderAgent extends Agent {
 		}
 
 		// Printout a dismissal message
-		System.out.println("Recommender-agent "+getAID().getName()+" terminating.");
+		//System.out.println("Recommender-agent "+getAID().getName()+" terminating.");
 	}
 
 
@@ -87,8 +87,8 @@ public class RecommenderAgent extends Agent {
 					e.printStackTrace();
 				}
 				
-				System.out.println("Received from " + msg.getSender().getName() + ":");
-				System.out.println(rating.toString());
+				//System.out.println("Received from " + msg.getSender().getName() + ":");
+				//System.out.println(rating.toString());
 				
 				// TODO update matrix
 				
@@ -125,7 +125,7 @@ public class RecommenderAgent extends Agent {
 
 			Double[] predictionsMatrix= RecommenderSystem.activeUserTSFPredictions(rating.getUser().getId() - 1, matrix, binaryItemTaxonomyMatrix);
 			
-			ArrayList<Item> recommendationsList= topNRecommendations(20, predictionsMatrix);
+			ArrayList<Pair<Item, Double>> recommendationsList= topNRecommendations(6, predictionsMatrix);
 			
 			Recommendation recommendation = new Recommendation(recommendationsList);
 
@@ -134,7 +134,7 @@ public class RecommenderAgent extends Agent {
 
 		}
 
-		public ArrayList<Item> topNRecommendations(int n, Double[] predictions)
+		public ArrayList<Pair<Item, Double>> topNRecommendations(int n, Double[] predictions)
 		{
 			ArrayList<Pair<Integer,Double>> pairIndexValuelist= new ArrayList<Pair<Integer, Double>>();
 
@@ -160,14 +160,14 @@ public class RecommenderAgent extends Agent {
 				}
 			});
 
-			ArrayList<Item> topNElements= new ArrayList<Item>();
+			ArrayList<Pair<Item, Double>> topNElements= new ArrayList<Pair<Item,Double>>();
 
 			int counter= 0;
 
 
 			for(int i = 0; i < pairIndexValuelist.size() && counter < n; i++)
 			{
-				topNElements.add(RecommenderSystem.items.get(pairIndexValuelist.get(i).getFirst()));
+				topNElements.add(new Pair<Item, Double>(RecommenderSystem.items.get(pairIndexValuelist.get(i).getFirst()), pairIndexValuelist.get(i).getSecond()));
 				counter++;
 			}
 
@@ -196,11 +196,11 @@ public class RecommenderAgent extends Agent {
 			dfd.addServices(sd);
 			try {
 				DFAgentDescription[] result = DFService.search(myAgent, dfd); 
-				System.out.println("Found the following client agents:");
+				//System.out.println("Found the following client agents:");
 				clientAgents = new AID[result.length];
 				for (int i = 0; i < result.length; ++i) {
 					clientAgents[i] = result[i].getName();
-					System.out.println(clientAgents[i].getName());
+					//System.out.println(clientAgents[i].getName());
 					
 					// Inform client Agent with new recommendations
 					myAgent.addBehaviour(new CalculateRecommendations(clientAgents[i], this.rating));

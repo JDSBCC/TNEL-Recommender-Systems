@@ -1,24 +1,18 @@
 package ginterface;
 
-import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
+import java.text.DecimalFormat;
+
+import agents.ClientAgent;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import javafx.scene.Scene;
 import javafx.scene.layout.*;
-import javafx.scene.text.Text;
-import javafx.scene.web.WebEngine;
-import javafx.scene.web.WebView;
 import javafx.stage.Stage;
-
-import java.util.ArrayList;
-
 import data.Item;
 import recommendersystem.RecommenderSystem;
 
@@ -28,8 +22,11 @@ import recommendersystem.RecommenderSystem;
 public class NewClassification {
 
     private Scene scene;
+    private Stage primaryStage;
 
     public NewClassification(final Stage primaryStage){
+    	
+    	this.primaryStage=primaryStage;
     	
     	//RecommenderSystem.items;
 
@@ -57,7 +54,18 @@ public class NewClassification {
         Label title = new Label("Recommendations");
         title.setId("title");
         
-        hbox.getChildren().addAll(title);
+        Button back=new Button("Return");
+        back.setId("back");
+        back.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                Rating_menu rm = new Rating_menu();
+                rm.init(primaryStage);
+                primaryStage.setScene(rm.getScene());
+            }
+        });
+        
+        hbox.getChildren().addAll(title, back);
         return hbox;
     }
     
@@ -69,8 +77,8 @@ public class NewClassification {
         vb.setMaxWidth(585);
         vb.setMinWidth(585);
         vb.setId("list");
-        for (int i = 0; i < /*RecommenderSystem.items.size()*/100; i++) {
-        	vb.getChildren().add(getMovie(RecommenderSystem.items.get(i)));
+        for (int i = 0; i < ClientAgent.recommendation.getRecommendedItems().size(); i++) {
+        	vb.getChildren().add(getMovie(ClientAgent.recommendation.getRecommendedItems().get(i).getFirst(), ClientAgent.recommendation.getRecommendedItems().get(i).getSecond()));
         }
 
     	ScrollPane scroll = new ScrollPane();
@@ -80,7 +88,7 @@ public class NewClassification {
         return scroll;
     }
     
-    public HBox getMovie(Item item){
+    public HBox getMovie(Item item, Double rate){
     	HBox hbox = new HBox();
     	hbox.setId("hbox");
     	hbox.setSpacing(10);
@@ -99,11 +107,15 @@ public class NewClassification {
 
         
         //ArrayList<Item>
-        int rat2 = RecommenderSystem.getRatingsByUserItem(4, item);//active user
-        if(rat2!=0){
-            Label tsf = new Label(rat2+"");
-            tsf.setId("tsf");
-            hbox.getChildren().add(tsf);
+        if(rate!=null){
+        	DecimalFormat oneDigit = new DecimalFormat("#,##0.0");//format to 1 decimal place
+        	double ratio = Double.parseDouble(oneDigit.format(rate));
+        	if(ratio>5.0){
+        		ratio=5;
+        	}
+		    Label tsf = new Label(ratio+"");
+		    tsf.setId("tsf");
+		    hbox.getChildren().add(tsf);
         }
         
         hbox.getChildren().add(vb);

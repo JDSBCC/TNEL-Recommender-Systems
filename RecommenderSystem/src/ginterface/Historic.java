@@ -3,7 +3,10 @@ package ginterface;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Insets;
+import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
@@ -11,7 +14,6 @@ import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import javafx.scene.Scene;
 import javafx.scene.layout.*;
 import javafx.stage.Stage;
-
 import data.Item;
 import recommendersystem.RecommenderSystem;
 
@@ -21,7 +23,7 @@ public class Historic {
     private Scene scene;
     private Stage primaryStage;
 
-    private static int user=1;
+    private static int user=RecommenderSystem.activeUser;
 
     public Historic(final Stage primaryStage){
     	
@@ -51,20 +53,30 @@ public class Historic {
 
         Label title = new Label("Movies List");
         title.setId("title");
-        final ChoiceBox cb = new ChoiceBox(FXCollections.observableArrayList(RecommenderSystem.users));
+        final ChoiceBox cb = new ChoiceBox(FXCollections.observableArrayList(RecommenderSystem.users.subList(0, RecommenderSystem.num_users)));
         cb.getSelectionModel().select(user-1);
         cb.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observableValue, Number number, Number number2) {
             	String value = cb.getItems().get((Integer) number2).toString().replaceAll("[^0-9]", "");
             	user=Integer.parseInt(value);
-            	//System.out.println(value);
 				Historic h = new Historic(primaryStage);
 				primaryStage.setScene(h.getScene());
             }
           });
         
-        hbox.getChildren().addAll(title, cb);
+        Button back=new Button("Return");
+        back.setId("back");
+        back.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                Rating_menu rm = new Rating_menu();
+                rm.init(primaryStage);
+                primaryStage.setScene(rm.getScene());
+            }
+        });
+        
+        hbox.getChildren().addAll(title, cb, back);
         return hbox;
     }
     
@@ -76,7 +88,7 @@ public class Historic {
         vb.setMaxWidth(585);
         vb.setMinWidth(585);
         vb.setId("list");
-        for (int i = 0; i < /*RecommenderSystem.items.size()*/100; i++) {
+        for (int i = 0; i < RecommenderSystem.num_items; i++) {
         	vb.getChildren().add(getMovie(RecommenderSystem.items.get(i)));
         }
 

@@ -133,14 +133,10 @@ public class Classify {
         		public void changed(ObservableValue<? extends Number> observableValue, Number number, Number number2) {
         			String value = cb.getItems().get((Integer) number2).toString();
                 	int rate=Integer.parseInt(value);
+                	
         			RecommenderSystem.clientAgent.sendRating(RecommenderSystem.activeUser,item.getId(),rate);
-        			
-        			for(int i = 0; i<RecommenderSystem.ratings.size();i++){
-        				if(RecommenderSystem.ratings.get(i).getUser().getId()==RecommenderSystem.activeUser && item.getId()==RecommenderSystem.ratings.get(i).getItem().getId()){
-        					RecommenderSystem.ratings.set(i, new Rating(RecommenderSystem.activeUser, item.getId(), rate, "123456"));
-        				}
-        			}
-        			
+
+        			RecommenderSystem.ratings.add(new Rating(RecommenderSystem.activeUser, item.getId(), rate, "123456"));
         		}
         	});
             

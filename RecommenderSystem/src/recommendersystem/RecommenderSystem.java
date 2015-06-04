@@ -57,7 +57,7 @@ public class RecommenderSystem {
 
 	public static void main(String[] args) {
 		
-		System.out.println("Recommender System");
+		//System.out.println("Recommender System");
 		
 		//Read data from database
 		File file = new File();
@@ -65,11 +65,11 @@ public class RecommenderSystem {
 		file.read("genre");
 		file.read("item");
 		file.read("data");
-		System.out.println("Database readed");
+		//System.out.println("Database readed");
 		
 
 		//Get Ratings Matrix
-		System.out.println("Ratings Matrix");
+		//System.out.println("Ratings Matrix");
 //		Double [][]matrix = Matrix.getRatingsMatrix(943, 1682, 100000);
 		
 		Double [][]matrix = Matrix.getRatingsMatrix(num_users, num_items, ratings.size());
@@ -134,8 +134,8 @@ public class RecommenderSystem {
 		PearsonCorrelation pearsonCorrelation= new PearsonCorrelation();
 		JaccardMetricUserBased jaccardMetric= new JaccardMetricUserBased();
 
-		System.out.println("Applying Pearson Correlation and Jaccard Metric:");
-		System.out.println("");
+		//System.out.println("Applying Pearson Correlation and Jaccard Metric:");
+		//System.out.println("");
 
 		// Buyer-Buyer enhanced user-based CF similarity matrix
 		Double[][] eucfMatrix = new Double[supplierBuyerRatingMatrix.length][supplierBuyerRatingMatrix.length];
@@ -156,8 +156,8 @@ public class RecommenderSystem {
 		}
 
 		// print Buyer-Buyer enhanced user-based CF similarity matrix
-		System.out.println("B-B enhanced user-based CF similarity matrix:");
-		System.out.println("");
+		//System.out.println("B-B enhanced user-based CF similarity matrix:");
+		//System.out.println("");
 
 		//		for(int i = 0; i < eucfMatrix.length; i++)
 		//		{
@@ -218,8 +218,8 @@ public class RecommenderSystem {
 		}
 
 		//print B-B direct implicit trust matrix
-		System.out.println("");
-		System.out.println("B-B direct implicit trust matrix:");
+		//System.out.println("");
+		//System.out.println("B-B direct implicit trust matrix:");
 
 //		FileWriter trustMatrixFile= null;
 //
@@ -262,8 +262,8 @@ public class RecommenderSystem {
 		}
 
 		//print B-B propagated implicit trust matrix
-		System.out.println("");
-		System.out.println("B-B propagated implicit trust matrix:");
+		//System.out.println("");
+		//System.out.println("B-B propagated implicit trust matrix:");
 
 //		FileWriter trustPropagationMatrixFile= null;
 //
@@ -286,8 +286,8 @@ public class RecommenderSystem {
 //			e.printStackTrace();
 //		}
 
-		System.out.println("");
-		System.out.println("TeCF predicted supplier-buyer matrix:");
+		//System.out.println("");
+		//System.out.println("TeCF predicted supplier-buyer matrix:");
 
 
 		Double[] tecfLine = new Double[supplierBuyerRatingMatrix[0].length];
@@ -345,8 +345,8 @@ public class RecommenderSystem {
 		AdjustedCosineSimilarity adjustedCosineSimilarity= new AdjustedCosineSimilarity();
 		JaccardMetricItemBased jaccardMetricItemBased= new JaccardMetricItemBased();
 
-		System.out.println("Applying Adjusted Cosine Similarity Measure and Jaccard Metric [Item Based]:");
-		System.out.println("");
+		//System.out.println("Applying Adjusted Cosine Similarity Measure and Jaccard Metric [Item Based]:");
+		//System.out.println("");
 
 		// Supplier-Supplier enhanced item-based CF similarity matrix
 		Double[][] itemSimilarityMatrix = new Double[supplierBuyerRatingMatrix[0].length][supplierBuyerRatingMatrix[0].length];
@@ -367,8 +367,8 @@ public class RecommenderSystem {
 
 
 		// print Supplier-Supplier enhanced item-based CF similarity matrix
-		System.out.println("Supplier-Supplier enhanced item-based CF similarity matrix:");
-		System.out.println("");
+		//System.out.println("Supplier-Supplier enhanced item-based CF similarity matrix:");
+		//System.out.println("");
 
 //		FileWriter itemSimilarityMatrixFile= null;
 //
@@ -399,10 +399,10 @@ public class RecommenderSystem {
 
 		BinaryJaccardSimilarityMetric bjsm= new BinaryJaccardSimilarityMetric();
 
-		System.out.println("");
-		System.out.println("");
-		System.out.println("Applying Binary Jaccard Similarity Metric:");
-		System.out.println("");
+		//System.out.println("");
+		//System.out.println("");
+		//System.out.println("Applying Binary Jaccard Similarity Metric:");
+		//System.out.println("");
 
 		// Supplier-Supplier semantic similarity matrix
 		Double[][] bjsmMatrix = new Double[binaryItemTaxonomyMatrix.length][binaryItemTaxonomyMatrix.length];
@@ -445,10 +445,10 @@ public class RecommenderSystem {
 
 		ItemReputation itemReputation= new ItemReputation();
 
-		System.out.println("");
-		System.out.println("");
-		System.out.println("Applying Item Reputation:");
-		System.out.println("");
+		//System.out.println("");
+		//System.out.println("");
+		//System.out.println("Applying Item Reputation:");
+		//System.out.println("");
 
 		// Supplier-Supplier semantic similarity matrix
 		Double[] itemReputationMatrix = new Double[supplierBuyerRatingMatrix[0].length];
@@ -481,8 +481,8 @@ public class RecommenderSystem {
 //		}
 
 
-		System.out.println("");
-		System.out.println("SeCF predicted rating matrix:");
+		//System.out.println("");
+		//System.out.println("SeCF predicted rating matrix:");
 
 
 		Double[] secfLine = new Double[supplierBuyerRatingMatrix[0].length];
@@ -535,10 +535,10 @@ public class RecommenderSystem {
 
 		TrustSemanticFusion trustSemanticFusion = new TrustSemanticFusion();
 
-		System.out.println("");
-		System.out.println("");
-		System.out.println("Trust Semantic Fusion -> Predicted User-Item Rating Matrix:");
-		System.out.println("");
+		//System.out.println("");
+		//System.out.println("");
+		//System.out.println("Trust Semantic Fusion -> Predicted User-Item Rating Matrix:");
+		//System.out.println("");
 
 		// Predicted User-Item Rating Matrix
 		Double[] predictedUserItemRatingLine = new Double[supplierBuyerRatingMatrix[0].length];

@@ -7,14 +7,14 @@ import data.Item;
 
 public class Recommendation implements Serializable{
 	
-	private ArrayList<Item> recommendedItems;
+	private ArrayList<Pair<Item, Double>> recommendedItems;
 	
-	public Recommendation(ArrayList<Item> recommendedItems)
+	public Recommendation(ArrayList<Pair<Item, Double>> recommendedItems)
 	{
 		this.recommendedItems= recommendedItems;
 	}
 
-	public ArrayList<Item> getRecommendedItems() {
+	public ArrayList<Pair<Item, Double>> getRecommendedItems() {
 		return recommendedItems;
 	}
 	
